@@ -7,10 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.ewm.EndpointHitDto;
-import ru.practicum.ewm.repository.StatsRepository;
 import ru.practicum.ewm.ViewStatsDto;
 import ru.practicum.ewm.model.EndpointHit;
 import ru.practicum.ewm.model.StatsMapper;
+import ru.practicum.ewm.repository.StatsRepository;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -18,7 +18,7 @@ import java.util.List;
 @Service
 @Slf4j
 @Transactional(readOnly = true)
-@FieldDefaults (makeFinal = true, level = AccessLevel.PRIVATE)
+@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class StatsServiceImpl implements StatsService {
     StatsRepository repository;
 
