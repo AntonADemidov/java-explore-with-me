@@ -1,7 +1,7 @@
 version: '3.1'
 services:
   ewm-stats:
-    build: ./ewm-stats
+    build: ./ewm-stats/stats-server
     container_name: ewm-stats-container
     ports:
       - "9090:9090"
