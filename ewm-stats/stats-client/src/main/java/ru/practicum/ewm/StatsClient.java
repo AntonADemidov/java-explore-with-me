@@ -47,7 +47,7 @@ public class StatsClient {
 
     private RestTemplate createRestTemplate(String prefix) {
         return new RestTemplateBuilder()
-                .uriTemplateHandler(new DefaultUriBuilderFactory(BASE_URL + prefix))
+                .uriTemplateHandler(new DefaultUriBuilderFactory(String.format("%s%s",BASE_URL, prefix)))
                 .requestFactory(HttpComponentsClientHttpRequestFactory::new)
                 .build();
     }

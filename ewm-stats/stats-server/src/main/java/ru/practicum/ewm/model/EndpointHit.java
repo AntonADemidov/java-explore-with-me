@@ -1,13 +1,14 @@
 package ru.practicum.ewm.model;
 
-import lombok.AccessLevel;
-import lombok.Data;
+import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
-@Data
+@Getter
+@Setter
+@RequiredArgsConstructor
 @Entity
 @Table(name = "hits")
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)

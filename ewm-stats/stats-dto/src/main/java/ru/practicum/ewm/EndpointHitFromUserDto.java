@@ -10,7 +10,7 @@ import javax.validation.constraints.NotBlank;
 @Data
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class EndpointHitDtoFromUser {
+public class EndpointHitFromUserDto {
     Long id;
     @NotBlank
     String app;

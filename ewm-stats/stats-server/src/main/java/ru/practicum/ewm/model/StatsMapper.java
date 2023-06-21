@@ -1,14 +1,14 @@
 package ru.practicum.ewm.model;
 
 import ru.practicum.ewm.EndpointHitDto;
-import ru.practicum.ewm.EndpointHitDtoFromUser;
+import ru.practicum.ewm.EndpointHitFromUserDto;
 
 import java.time.LocalDateTime;
 
 public class StatsMapper {
-    public static EndpointHitDto toEndpointHitDto(EndpointHitDtoFromUser endpointHitDtoFromUser, LocalDateTime timestamp) {
-        return new EndpointHitDto(endpointHitDtoFromUser.getId(), endpointHitDtoFromUser.getApp(),
-                endpointHitDtoFromUser.getUri(), endpointHitDtoFromUser.getIp(), timestamp);
+    public static EndpointHitDto toEndpointHitDto(EndpointHitFromUserDto endpointHitFromUserDto, LocalDateTime timestamp) {
+        return new EndpointHitDto(endpointHitFromUserDto.getId(), endpointHitFromUserDto.getApp(),
+                endpointHitFromUserDto.getUri(), endpointHitFromUserDto.getIp(), timestamp);
     }
 
     public static EndpointHitDto toEndpointHitDto(EndpointHit endpointHit) {

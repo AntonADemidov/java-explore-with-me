@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.ewm.EndpointHitDto;
-import ru.practicum.ewm.EndpointHitDtoFromUser;
+import ru.practicum.ewm.EndpointHitFromUserDto;
 import ru.practicum.ewm.ViewStatsDto;
 import ru.practicum.ewm.model.StatsMapper;
 import ru.practicum.ewm.service.StatsService;
@@ -32,9 +32,9 @@ public class StatsController {
     }
 
     @PostMapping("/hit")
-    public EndpointHitDto createEndpointHit(@RequestBody @Valid EndpointHitDtoFromUser endpointHitDtoFromUser) {
-        LocalDateTime timestamp = LocalDateTime.parse(endpointHitDtoFromUser.getTimestamp(), FORMATTER);
-        EndpointHitDto endpointHitDto = StatsMapper.toEndpointHitDto(endpointHitDtoFromUser, timestamp);
+    public EndpointHitDto createEndpointHit(@RequestBody @Valid EndpointHitFromUserDto endpointHitFromUserDto) {
+        LocalDateTime timestamp = LocalDateTime.parse(endpointHitFromUserDto.getTimestamp(), FORMATTER);
+        EndpointHitDto endpointHitDto = StatsMapper.toEndpointHitDto(endpointHitFromUserDto, timestamp);
         log.info("Сохранение данных о запросе пользователя {}", endpointHitDto);
         return statsService.createEndpointHit(endpointHitDto);
     }
