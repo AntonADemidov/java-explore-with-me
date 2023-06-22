@@ -19,7 +19,7 @@ import java.util.Map;
 public class StatsClient {
     static final String BASE_URL = "https://localhost:9090";
 
-    public ResponseEntity<Object> create(EndpointHitDto endpointHitDto) {
+    public ResponseEntity<Object> createEndpointHit(EndpointHitDto endpointHitDto) {
         RestTemplate rest = createRestTemplate("/hit");
         return makeAndSendRequest(rest, HttpMethod.POST, "", null, endpointHitDto);
     }
