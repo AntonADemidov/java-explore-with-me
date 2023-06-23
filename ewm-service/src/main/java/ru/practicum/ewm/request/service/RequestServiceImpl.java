@@ -8,15 +8,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.ewm.event.model.Event;
-import ru.practicum.ewm.request.model.*;
 import ru.practicum.ewm.event.model.State;
 import ru.practicum.ewm.event.service.EventService;
 import ru.practicum.ewm.request.exception.RequestNotFoundException;
 import ru.practicum.ewm.request.exception.RequestValidationException;
 import ru.practicum.ewm.request.mapper.RequestMapper;
+import ru.practicum.ewm.request.model.*;
 import ru.practicum.ewm.request.repository.RequestRepository;
-import ru.practicum.ewm.user.service.UserService;
 import ru.practicum.ewm.user.model.User;
+import ru.practicum.ewm.user.service.UserService;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;

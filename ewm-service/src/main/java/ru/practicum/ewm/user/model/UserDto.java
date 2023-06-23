@@ -1,6 +1,7 @@
 package ru.practicum.ewm.user.model;
 
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Data;
 import lombok.experimental.FieldDefaults;
 
 @Data

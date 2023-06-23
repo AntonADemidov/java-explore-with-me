@@ -56,7 +56,7 @@ public class Event {
     @Column(name = "participant_limit", nullable = false)
     Long participantLimit;
 
-    @OneToOne (fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "location_id", nullable = false)
     Location location;
 

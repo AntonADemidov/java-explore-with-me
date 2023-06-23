@@ -8,7 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.ewm.event.model.*;
+import ru.practicum.ewm.event.model.EventFullDto;
+import ru.practicum.ewm.event.model.EventShortDto;
+import ru.practicum.ewm.event.model.NewEventDto;
+import ru.practicum.ewm.event.model.UpdateEventRequest;
 import ru.practicum.ewm.event.service.EventService;
 
 import javax.validation.Valid;

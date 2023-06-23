@@ -8,9 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.ewm.request.model.RequestDto;
 import ru.practicum.ewm.request.model.RequestStateUpdateRequest;
 import ru.practicum.ewm.request.model.RequestStateUpdateResult;
-import ru.practicum.ewm.request.model.RequestDto;
 import ru.practicum.ewm.request.service.RequestService;
 
 import javax.validation.Valid;

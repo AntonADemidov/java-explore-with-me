@@ -5,6 +5,8 @@ import ru.practicum.ewm.compilation.model.CompilationDto;
 import ru.practicum.ewm.compilation.model.NewCompilationDto;
 import ru.practicum.ewm.compilation.model.UpdateCompilationRequest;
 
+import java.util.List;
+
 @Transactional
 public interface CompilationService {
     CompilationDto createCompilation(NewCompilationDto compilationDto);
@@ -12,4 +14,8 @@ public interface CompilationService {
     CompilationDto updateCompilation(Long compId, UpdateCompilationRequest request);
 
     void deleteCompilationById(Long compId);
+
+    CompilationDto getCompilationById(Long compId);
+
+    List<CompilationDto> getCompilations(Boolean pinned, Integer from, Integer size);
 }

@@ -25,14 +25,14 @@ public class EventPublicController {
 
     @GetMapping
     public List<EventFullDto> getPublicEvents(@RequestParam(value = "text", required = false) String text,
-                                               @RequestParam(value = "categories", required = false) List<Long> categories,
-                                               @RequestParam(value = "paid", required = false) Boolean paid,
-                                               @RequestParam(value = "rangeStart", required = false) String rangeStart,
-                                               @RequestParam(value = "rangeEnd", required = false) String rangeEnd,
-                                               @RequestParam(value = "onlyAvailable", required = false, defaultValue = "false") Boolean onlyAvailable,
-                                               @RequestParam(value = "sort", required = false, defaultValue = "EVENT_DATE") String sort,
-                                               @RequestParam(value = "from", required = false, defaultValue = "0") @PositiveOrZero Integer from,
-                                               @RequestParam(value = "size", required = false, defaultValue = "10") @PositiveOrZero Integer size) {
+                                              @RequestParam(value = "categories", required = false) List<Long> categories,
+                                              @RequestParam(value = "paid", required = false) Boolean paid,
+                                              @RequestParam(value = "rangeStart", required = false) String rangeStart,
+                                              @RequestParam(value = "rangeEnd", required = false) String rangeEnd,
+                                              @RequestParam(value = "onlyAvailable", required = false, defaultValue = "false") Boolean onlyAvailable,
+                                              @RequestParam(value = "sort", required = false, defaultValue = "EVENT_DATE") String sort,
+                                              @RequestParam(value = "from", required = false, defaultValue = "0") @PositiveOrZero Integer from,
+                                              @RequestParam(value = "size", required = false, defaultValue = "10") @PositiveOrZero Integer size) {
         log.info("Получение списка событий по параметрам: text={}, categories={}, paid={}, rangeStart={}, rangeEnd={}, onlyAvailable={}, sort={}, from={}, size={}.",
                 text, categories, paid, rangeStart, rangeEnd, onlyAvailable, sort, from, size);
         return eventService.getPublicEvents(text, categories, paid, rangeStart, rangeEnd, onlyAvailable, sort, from, size);

@@ -11,12 +11,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.ewm.PageNumber;
-import ru.practicum.ewm.category.repository.CategoryRepository;
+import ru.practicum.ewm.category.exception.CategoryNotFoundException;
 import ru.practicum.ewm.category.mapper.CategoryMapper;
 import ru.practicum.ewm.category.model.Category;
 import ru.practicum.ewm.category.model.CategoryDto;
-import ru.practicum.ewm.category.exception.CategoryNotFoundException;
 import ru.practicum.ewm.category.model.NewCategoryDto;
+import ru.practicum.ewm.category.repository.CategoryRepository;
 
 import java.util.List;
 import java.util.stream.Collectors;

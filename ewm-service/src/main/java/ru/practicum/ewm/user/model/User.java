@@ -2,7 +2,6 @@ package ru.practicum.ewm.user.model;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-import lombok.experimental.NonFinal;
 
 import javax.persistence.*;
 

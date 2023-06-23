@@ -11,12 +11,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.ewm.PageNumber;
+import ru.practicum.ewm.user.exception.UserNotFoundException;
 import ru.practicum.ewm.user.mapper.UserMapper;
-import ru.practicum.ewm.user.repository.UserRepository;
 import ru.practicum.ewm.user.model.NewUserRequest;
 import ru.practicum.ewm.user.model.User;
 import ru.practicum.ewm.user.model.UserDto;
-import ru.practicum.ewm.user.exception.UserNotFoundException;
+import ru.practicum.ewm.user.repository.UserRepository;
 
 import java.util.List;
 import java.util.stream.Collectors;

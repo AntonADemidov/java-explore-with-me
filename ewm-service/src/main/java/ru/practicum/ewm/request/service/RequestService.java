@@ -1,9 +1,9 @@
 package ru.practicum.ewm.request.service;
 
 import org.springframework.transaction.annotation.Transactional;
+import ru.practicum.ewm.request.model.RequestDto;
 import ru.practicum.ewm.request.model.RequestStateUpdateRequest;
 import ru.practicum.ewm.request.model.RequestStateUpdateResult;
-import ru.practicum.ewm.request.model.RequestDto;
 
 import java.util.List;
 
