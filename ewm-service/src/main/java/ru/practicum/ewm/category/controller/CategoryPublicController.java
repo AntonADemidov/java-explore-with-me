@@ -7,7 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.ewm.category.CategoryService;
+import ru.practicum.ewm.category.service.CategoryService;
 import ru.practicum.ewm.category.model.CategoryDto;
 
 import javax.validation.constraints.Positive;

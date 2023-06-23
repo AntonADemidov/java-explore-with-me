@@ -1,12 +1,13 @@
 package ru.practicum.ewm.event.controller;
 
+import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.ewm.event.model.EventFullDto;
-import ru.practicum.ewm.event.model.EventShortDto;
 import ru.practicum.ewm.event.service.EventService;
 
 import javax.validation.constraints.Positive;
@@ -18,10 +19,10 @@ import java.util.List;
 @RestController
 @RequestMapping(path = "/events")
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
+@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class EventPublicController {
     EventService eventService;
 
-    //TODO
     @GetMapping
     public List<EventFullDto> getPublicEvents(@RequestParam(value = "text", required = false) String text,
                                                @RequestParam(value = "categories", required = false) List<Long> categories,
@@ -37,7 +38,6 @@ public class EventPublicController {
         return eventService.getPublicEvents(text, categories, paid, rangeStart, rangeEnd, onlyAvailable, sort, from, size);
     }
 
-    //TODO
     @GetMapping("/{id}")
     public EventFullDto getPublicEventById(@PathVariable @Positive Long eventId) {
         log.info("Получение события: eventId={}.", eventId);

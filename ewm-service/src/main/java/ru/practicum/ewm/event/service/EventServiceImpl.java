@@ -1,5 +1,6 @@
 package ru.practicum.ewm.event.service;
 
+import com.querydsl.core.types.dsl.BooleanExpression;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -11,21 +12,22 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.ewm.PageNumber;
-import ru.practicum.ewm.category.CategoryService;
+import ru.practicum.ewm.category.service.CategoryService;
 import ru.practicum.ewm.category.model.Category;
-import ru.practicum.ewm.event.mapper.EventMapper;
-import ru.practicum.ewm.event.repository.EventRepository;
 import ru.practicum.ewm.event.exception.EventNotFoundException;
 import ru.practicum.ewm.event.exception.EventValidationException;
-import ru.practicum.ewm.event.model.*;
-import ru.practicum.ewm.event.model.Location;
+import ru.practicum.ewm.event.mapper.EventMapper;
 import ru.practicum.ewm.event.mapper.LocationMapper;
+import ru.practicum.ewm.event.model.*;
+import ru.practicum.ewm.event.model.QEvent;
+import ru.practicum.ewm.event.repository.EventRepository;
 import ru.practicum.ewm.event.repository.LocationRepository;
-import ru.practicum.ewm.user.UserService;
+import ru.practicum.ewm.user.service.UserService;
 import ru.practicum.ewm.user.model.User;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -39,8 +41,8 @@ public class EventServiceImpl implements EventService {
     int intervalForAdmin = 1;
     int intervalForOwner = 2;
     EventRepository eventRepository;
-    UserService userService;
     LocationRepository locationRepository;
+    UserService userService;
     CategoryService categoryService;
 
     @Override
@@ -57,6 +59,7 @@ public class EventServiceImpl implements EventService {
 
         event.setState(State.PENDING);
         event.setCreatedOn(LocalDateTime.now());
+        //TODO
         event.setPublishedOn(LocalDateTime.now());
         event.setLocation(actualLocation);
         event.setCategory(category);
@@ -73,7 +76,8 @@ public class EventServiceImpl implements EventService {
         LocalDateTime eventDate = event.getEventDate();
 
         if (!current.plusHours(interval).isBefore(eventDate)) {
-            throw new EventValidationException(String.format("Время до начала события от текущего момента в часах должно быть не менее, чем: %d. Начало события: %s", interval, eventDate.format(FORMATTER)));
+            throw new EventValidationException(String.format("Время до начала события от текущего момента в часах должно быть не менее, чем: %d. Начало события: %s",
+                    interval, eventDate.format(FORMATTER)));
         }
     }
 
@@ -92,7 +96,10 @@ public class EventServiceImpl implements EventService {
         return eventShortDtos;
     }
 
-    private Event getEventById(Long eventId) {
+    //TODO
+    // Нужно ли методу быть в интерфейсе? (временно он там)
+    @Override
+    public Event getEventById(Long eventId) {
         return eventRepository.findById(eventId).orElseThrow(() ->
                 new EventNotFoundException(String.format("Событие с id #%d отсутствует в базе.", eventId)));
     }
@@ -140,7 +147,56 @@ public class EventServiceImpl implements EventService {
     public List<EventFullDto> getEventsByAdmin(List<Long> users, List<String> states, List<Long> categories,
                                                String rangeStart, String rangeEnd, Integer from, Integer size) {
         Pageable request = PageRequest.of(PageNumber.get(from, size), size);
-        return null;
+        QEvent event = QEvent.event;
+        List<BooleanExpression> conditions = new ArrayList<>();
+
+        if (users != null) {
+            for (Long userId : users) {
+                conditions.add(event.initiator.id.eq(userId));
+            }
+        }
+
+        if (states != null) {
+            for (String state : states) {
+                State eventState = State.valueOf(state);
+                conditions.add(event.state.eq(eventState));
+            }
+        }
+
+        if (categories != null) {
+            for (Long categoryId : categories) {
+                conditions.add(event.category.id.eq(categoryId));
+            }
+        }
+
+        if (rangeStart != null) {
+            LocalDateTime start = LocalDateTime.parse(rangeStart, FORMATTER);
+            conditions.add((event.eventDate.eq(start)).or(event.eventDate.gt(start)));
+        }
+
+        if (rangeEnd != null) {
+            LocalDateTime end = LocalDateTime.parse(rangeEnd, FORMATTER);
+            conditions.add((event.eventDate.eq(end)).or(event.eventDate.lt(end)));
+        }
+
+        Page<Event> requestPage;
+        if (conditions.size() != 0) {
+            BooleanExpression finalCondition = conditions.stream()
+                    .reduce(BooleanExpression::and)
+                    .get();
+            requestPage = eventRepository.findAll(finalCondition, request);
+        } else {
+            requestPage = eventRepository.findAll(request);
+        }
+
+        List<Event> events = requestPage.getContent();
+
+        List<EventFullDto> eventFullDtos = events.stream()
+                .map(EventMapper::toEventFullDto)
+                .collect(Collectors.toList());
+
+        log.info("Список мероприятий сформирован: количество элементов={}.", eventFullDtos.size());
+        return eventFullDtos;
     }
 
     //TODO
@@ -176,6 +232,7 @@ public class EventServiceImpl implements EventService {
                 validateEventStateIsNotPublished(event);
                 validateEventStateIsNotCancelled(event);
                 event.setState(State.PUBLISHED);
+                event.setCreatedOn(LocalDateTime.now());
             } else {
                 validateEventStateIsNotPublished(event);
                 validateEventStateIsNotCancelled(event);
@@ -246,7 +303,6 @@ public class EventServiceImpl implements EventService {
         if (request.getRequestModeration() != null) {
             event.setRequestModeration(request.getRequestModeration());
         }
-
     }
 
     private void updateParticipantLimit(Event event, UpdateEventRequest request) {
@@ -257,7 +313,13 @@ public class EventServiceImpl implements EventService {
 
     private void updateLocation(Event event, UpdateEventRequest request) {
         if (request.getLocation() != null) {
-            event.setLocation(LocationMapper.toLocation(request.getLocation()));
+            Location deletedLocation = event.getLocation();
+            locationRepository.delete(deletedLocation);
+
+            Location location = LocationMapper.toLocation(request.getLocation());
+            Location newLocation = locationRepository.save(location);
+
+            event.setLocation(newLocation);
         }
     }
 

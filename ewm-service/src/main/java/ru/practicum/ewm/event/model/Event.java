@@ -3,10 +3,14 @@ package ru.practicum.ewm.event.model;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import ru.practicum.ewm.category.model.Category;
+import ru.practicum.ewm.compilation.model.Compilation;
+import ru.practicum.ewm.request.model.Request;
 import ru.practicum.ewm.user.model.User;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -52,7 +56,7 @@ public class Event {
     @Column(name = "participant_limit", nullable = false)
     Long participantLimit;
 
-    @OneToOne
+    @OneToOne (fetch = FetchType.LAZY)
     @JoinColumn(name = "location_id", nullable = false)
     Location location;
 
@@ -61,12 +65,17 @@ public class Event {
     Category category;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "initiator_id", nullable = false)
     User initiator;
+
+    @OneToMany(mappedBy = "event", fetch = FetchType.LAZY)
+    List<Request> participationRequests;
+
+    @ManyToMany(mappedBy = "events")
+    Set<Compilation> compilations;
 
     //TODO
     /*
-    Long confirmedRequests;
     Long views;
      */
 }

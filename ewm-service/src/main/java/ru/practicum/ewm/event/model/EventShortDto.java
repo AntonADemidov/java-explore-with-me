@@ -16,10 +16,10 @@ public class EventShortDto {
     Boolean paid;
     CategoryDto category;
     UserShortDto initiator;
+    Long confirmedRequests;
 
     //TODO
     /*
-    Long confirmedRequests;
     Long views;
      */
 }

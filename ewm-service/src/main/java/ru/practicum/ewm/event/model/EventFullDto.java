@@ -23,10 +23,10 @@ public class EventFullDto {
     LocationDto location;
     CategoryDto category;
     UserShortDto initiator;
+    Long confirmedRequests;
 
     //TODO
     /*
-    Long confirmedRequests;
     Long views;
      */
 }

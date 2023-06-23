@@ -8,11 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.ewm.event.model.*;
 import ru.practicum.ewm.event.service.EventService;
-import ru.practicum.ewm.event.model.EventFullDto;
-import ru.practicum.ewm.event.model.EventShortDto;
-import ru.practicum.ewm.event.model.NewEventDto;
-import ru.practicum.ewm.event.model.UpdateEventRequest;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
@@ -22,13 +19,13 @@ import java.util.List;
 @Slf4j
 @Validated
 @RestController
-@RequestMapping(path = "/users")
+@RequestMapping(path = "/users/{userId}/events")
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class EventPrivateController {
     EventService eventService;
 
-    @PostMapping("/{userId}/events")
+    @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public EventFullDto createEvent(@PathVariable @Positive Long userId,
                                     @RequestBody @Valid NewEventDto newEventDto) {
@@ -36,7 +33,7 @@ public class EventPrivateController {
         return eventService.createEvent(userId, newEventDto);
     }
 
-    @GetMapping("/{userId}/events")
+    @GetMapping
     public List<EventShortDto> getEventsByOwner(@PathVariable @Positive Long userId,
                                                 @RequestParam(value = "from", required = false, defaultValue = "0") @PositiveOrZero Integer from,
                                                 @RequestParam(value = "size", required = false, defaultValue = "10") @PositiveOrZero Integer size) {
@@ -44,26 +41,18 @@ public class EventPrivateController {
         return eventService.getEventsByOwner(userId, from, size);
     }
 
-    @GetMapping("/{userId}/events/{eventId}")
+    @GetMapping("/{eventId}")
     public EventFullDto getEventByOwner(@PathVariable @Positive Long userId,
                                         @PathVariable @Positive Long eventId) {
         log.info("Просмотр события пользователя: userId={}, eventId={}", userId, eventId);
         return eventService.getEventByOwner(userId, eventId);
     }
 
-    @PatchMapping("/{userId}/events/{eventId}")
+    @PatchMapping("/{eventId}")
     public EventFullDto updateEventByOwner(@PathVariable @Positive Long userId,
                                            @PathVariable @Positive Long eventId,
                                            @RequestBody @Valid UpdateEventRequest updateEventRequest) {
         log.info("Обновление события пользователем: eventId={}, userId={}.", eventId, userId);
         return eventService.updateEventByOwner(userId, eventId, updateEventRequest);
     }
-
-    //TODO
-    @GetMapping("/{userId}/events/{eventId}/requests")
-    public void getRequest() {}
-
-    //TODO
-    @PatchMapping("/{userId}/events/{eventId}/requests")
-    public void updateRequest() {}
 }

@@ -14,14 +14,19 @@ public interface EventService {
 
     EventFullDto getEventByOwner(Long userId, Long eventId);
 
+    Event getEventById(Long eventId);
+
     @Transactional
     EventFullDto updateEventByOwner(Long userId, Long eventId, UpdateEventRequest updateEventRequest);
 
+    @Transactional
     EventFullDto updateEventByAdmin(Long eventId, UpdateEventRequest updateEventRequest);
 
-    List<EventFullDto> getEventsByAdmin(List<Long> users, List<String> states, List<Long> categories, String rangeStart, String rangeEnd, Integer from, Integer size);
+    List<EventFullDto> getEventsByAdmin(List<Long> users, List<String> states, List<Long> categories, String rangeStart,
+                                        String rangeEnd, Integer from, Integer size);
 
     EventFullDto getPublicEventById(Long eventId);
 
-    List<EventFullDto> getPublicEvents(String text, List<Long> categories, Boolean paid, String rangeStart, String rangeEnd, Boolean onlyAvailable, String sort, Integer from, Integer size);
+    List<EventFullDto> getPublicEvents(String text, List<Long> categories, Boolean paid, String rangeStart,
+                                       String rangeEnd, Boolean onlyAvailable, String sort, Integer from, Integer size);
 }
