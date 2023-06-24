@@ -33,10 +33,10 @@ public class StatsController {
 
     @PostMapping("/hit")
     public EndpointHitDto createEndpointHit(@RequestBody @Valid EndpointHitFromUserDto endpointHitFromUserDto) {
-        LocalDateTime timestamp = LocalDateTime.parse(endpointHitFromUserDto.getTimestamp(), FORMATTER);
-        EndpointHitDto endpointHitDto = StatsMapper.toEndpointHitDto(endpointHitFromUserDto, timestamp);
-        log.info("Сохранение данных о запросе пользователя {}", endpointHitDto);
-        return statsService.createEndpointHit(endpointHitDto);
+        //LocalDateTime timestamp = LocalDateTime.parse(endpointHitFromUserDto.getTimestamp(), FORMATTER);
+        //EndpointHitDto endpointHitDto = StatsMapper.toEndpointHitDto(endpointHitFromUserDto, timestamp);
+        log.info("Сохранение данных о запросе пользователя {}", endpointHitFromUserDto);
+        return statsService.createEndpointHit(endpointHitFromUserDto);
     }
 
     @GetMapping("/stats")

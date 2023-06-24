@@ -9,11 +9,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.practicum.ewm.EndpointHitFromUserDto;
 import ru.practicum.ewm.PageNumber;
+import ru.practicum.ewm.StatsClient;
 import ru.practicum.ewm.category.model.Category;
 import ru.practicum.ewm.category.service.CategoryService;
+import ru.practicum.ewm.event.exception.DateValidationException;
 import ru.practicum.ewm.event.exception.EventNotFoundException;
 import ru.practicum.ewm.event.exception.EventValidationException;
 import ru.practicum.ewm.event.mapper.EventMapper;
@@ -21,12 +26,14 @@ import ru.practicum.ewm.event.mapper.LocationMapper;
 import ru.practicum.ewm.event.model.*;
 import ru.practicum.ewm.event.repository.EventRepository;
 import ru.practicum.ewm.event.repository.LocationRepository;
+import ru.practicum.ewm.request.model.RequestState;
 import ru.practicum.ewm.user.model.User;
 import ru.practicum.ewm.user.service.UserService;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -35,7 +42,7 @@ import java.util.stream.Collectors;
 @Transactional(readOnly = true)
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
-public class EventServiceImpl implements EventService {
+public class EventServiceImpl implements ru.practicum.ewm.event.service.EventService {
     static DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
     int intervalForAdmin = 1;
     int intervalForOwner = 2;
@@ -43,6 +50,7 @@ public class EventServiceImpl implements EventService {
     LocationRepository locationRepository;
     UserService userService;
     CategoryService categoryService;
+    StatsClient statsClient;
 
     @Override
     @Transactional
@@ -95,8 +103,6 @@ public class EventServiceImpl implements EventService {
         return eventShortDtos;
     }
 
-    //TODO
-    // Нужно ли методу быть в интерфейсе? (временно он там)
     @Override
     public Event getEventById(Long eventId) {
         return eventRepository.findById(eventId).orElseThrow(() ->
@@ -141,10 +147,11 @@ public class EventServiceImpl implements EventService {
         return eventFullDto;
     }
 
-    //TODO
     @Override
     public List<EventFullDto> getEventsByAdmin(List<Long> users, List<String> states, List<Long> categories,
                                                String rangeStart, String rangeEnd, Integer from, Integer size) {
+        LocalDateTime start;
+        LocalDateTime end;
         Pageable request = PageRequest.of(PageNumber.get(from, size), size);
         QEvent event = QEvent.event;
         List<BooleanExpression> conditions = new ArrayList<>();
@@ -168,13 +175,28 @@ public class EventServiceImpl implements EventService {
             }
         }
 
-        if (rangeStart != null) {
+        /*if (rangeStart != null) {
             LocalDateTime start = LocalDateTime.parse(rangeStart, FORMATTER);
             conditions.add((event.eventDate.eq(start)).or(event.eventDate.gt(start)));
         }
 
         if (rangeEnd != null) {
             LocalDateTime end = LocalDateTime.parse(rangeEnd, FORMATTER);
+            conditions.add((event.eventDate.eq(end)).or(event.eventDate.lt(end)));
+        }*/
+
+        if ((rangeStart != null) && (rangeEnd != null)) {
+            start = LocalDateTime.parse(rangeStart, FORMATTER);
+            end = LocalDateTime.parse(rangeEnd, FORMATTER);
+            dateValidation(start, end);
+
+            conditions.add((event.eventDate.eq(start)).or(event.eventDate.gt(start)));
+            conditions.add((event.eventDate.eq(end)).or(event.eventDate.lt(end)));
+        } else if ((rangeStart != null) && (rangeEnd == null)) {
+            start = LocalDateTime.parse(rangeStart, FORMATTER);
+            conditions.add((event.eventDate.eq(start)).or(event.eventDate.gt(start)));
+        } else {
+            end = LocalDateTime.parse(rangeEnd, FORMATTER);
             conditions.add((event.eventDate.eq(end)).or(event.eventDate.lt(end)));
         }
 
@@ -194,21 +216,120 @@ public class EventServiceImpl implements EventService {
                 .map(EventMapper::toEventFullDto)
                 .collect(Collectors.toList());
 
-        log.info("Список мероприятий сформирован: количество элементов={}.", eventFullDtos.size());
+        log.info("Список событий сформирован: количество элементов={}.", eventFullDtos.size());
         return eventFullDtos;
     }
 
-    //TODO
     @Override
     public EventFullDto getPublicEventById(Long eventId) {
         Event event = getEventById(eventId);
-        return null;
+
+        if (!event.getState().equals(State.PUBLISHED)) {
+            throw new EventNotFoundException(String.format("Меропритие с eventId=%d не опубликовано", event.getId()));
+        }
+
+        /*EndpointHitFromUserDto endpointHitFromUserDto = new EndpointHitFromUserDto();
+        endpointHitFromUserDto.setApp("ewm-service");
+        endpointHitFromUserDto.setUri(String.format("/events/%d", event.getId()));
+        endpointHitFromUserDto.setIp("192.163.0.1");
+        endpointHitFromUserDto.setTimestamp(LocalDateTime.now());
+
+        ResponseEntity<Object> response = statsClient.createEndpointHit(endpointHitFromUserDto);
+        System.out.println(response);*/
+
+        EventFullDto eventFullDto = EventMapper.toEventFullDto(event);
+        log.info("Просмотр события по eventId={}.", eventFullDto.getId());
+        return eventFullDto;
     }
 
-    //TODO
+    private void dateValidation (LocalDateTime start, LocalDateTime end) {
+        if (!start.isBefore(end)) {
+            throw new DateValidationException(String.format("Дата начала диапазона start=%s не может быть позднее даты окончания диапазона end=%s",
+                    start, end));
+        }
+    }
+
+
     @Override
-    public List<EventFullDto> getPublicEvents(String text, List<Long> categories, Boolean paid, String rangeStart, String rangeEnd, Boolean onlyAvailable, String sort, Integer from, Integer size) {
-        return null;
+    public List<EventShortDto> getPublicEvents(String text, List<Long> categories, Boolean paid, String rangeStart,
+                                              String rangeEnd, Boolean onlyAvailable, String sort, Integer from, Integer size) {
+        LocalDateTime start;
+        LocalDateTime end;
+        Pageable request = PageRequest.of(PageNumber.get(from, size), size);
+        List<BooleanExpression> conditions = new ArrayList<>();
+        QEvent event = QEvent.event;
+
+        conditions.add(event.state.eq(State.PUBLISHED));
+
+        if (text != null) {
+            String anyText = "%";
+            String condition = String.format("%s%s%s", anyText, text, anyText);
+            conditions.add((event.annotation.likeIgnoreCase(condition)).or(event.description.likeIgnoreCase(condition)));
+        }
+
+        if (categories != null) {
+            for (Long categoryId : categories) {
+                conditions.add(event.category.id.eq(categoryId));
+            }
+        }
+
+        if (paid != null) {
+            conditions.add(event.paid.eq(paid));
+        }
+
+        if ((rangeStart != null) && (rangeEnd != null)) {
+            start = LocalDateTime.parse(rangeStart, FORMATTER);
+            end = LocalDateTime.parse(rangeEnd, FORMATTER);
+            dateValidation(start, end);
+
+            conditions.add((event.eventDate.eq(start)).or(event.eventDate.gt(start)));
+            conditions.add((event.eventDate.eq(end)).or(event.eventDate.lt(end)));
+
+        } else if ((rangeStart != null) && (rangeEnd == null)) {
+            start = LocalDateTime.parse(rangeStart, FORMATTER);
+            conditions.add((event.eventDate.eq(start)).or(event.eventDate.gt(start)));
+
+        } else if ((rangeStart == null) && (rangeEnd != null)) {
+            end = LocalDateTime.parse(rangeEnd, FORMATTER);
+            conditions.add((event.eventDate.eq(end)).or(event.eventDate.lt(end)));
+
+        } else {
+            start = LocalDateTime.now();
+            conditions.add((event.eventDate.eq(start)).or(event.eventDate.gt(start)));
+        }
+
+        BooleanExpression finalCondition = conditions.stream()
+                .reduce(BooleanExpression::and)
+                .get();
+
+        EventSort finalSort = EventSort.valueOf(sort);
+        Comparator<EventShortDto> comparator;
+        if (finalSort.equals(EventSort.EVENT_DATE)) {
+            comparator = Comparator.comparing(EventShortDto::getEventDate);
+        } else {
+            comparator = Comparator.comparing(EventShortDto::getViews);
+        }
+
+        Page<Event> requestPage = eventRepository.findAll(finalCondition, request);
+
+        List<EventShortDto> events;
+        if (onlyAvailable) {
+            events = requestPage.getContent().stream()
+                    .filter(ev -> ev.getParticipantLimit() != 0)
+                    .filter(ev -> ev.getParticipationRequests().stream()
+                            .filter(req -> req.getStatus().equals(RequestState.CONFIRMED))
+                            .count() < ev.getParticipantLimit())
+                    .map(EventMapper::toEventShortDto)
+                    .collect(Collectors.toList());
+        } else {
+            events = requestPage.getContent().stream()
+                    .map(EventMapper::toEventShortDto)
+                    .sorted(comparator)
+                    .collect(Collectors.toList());
+        }
+
+        log.info("Список событий сформирован: количество элементов={}.", events.size());
+        return events;
     }
 
     private void updateStateByOwner(Event event, UpdateEventRequest request) {

@@ -3,21 +3,23 @@ package ru.practicum.ewm.model;
 import ru.practicum.ewm.EndpointHitDto;
 import ru.practicum.ewm.EndpointHitFromUserDto;
 
-import java.time.LocalDateTime;
-
 public class StatsMapper {
-    public static EndpointHitDto toEndpointHitDto(EndpointHitFromUserDto endpointHitFromUserDto, LocalDateTime timestamp) {
-        return new EndpointHitDto(endpointHitFromUserDto.getId(), endpointHitFromUserDto.getApp(),
-                endpointHitFromUserDto.getUri(), endpointHitFromUserDto.getIp(), timestamp);
-    }
-
     public static EndpointHitDto toEndpointHitDto(EndpointHit endpointHit) {
-        return new EndpointHitDto(endpointHit.getId(), endpointHit.getApp(), endpointHit.getUri(), endpointHit.getIp(),
-                endpointHit.getTimestamp());
+        EndpointHitDto endpointHitDto = new EndpointHitDto();
+        endpointHitDto.setId(endpointHit.getId());
+        endpointHitDto.setApp(endpointHit.getApp());
+        endpointHitDto.setUri(endpointHit.getUri());
+        endpointHitDto.setIp(endpointHit.getIp());
+        endpointHitDto.setTimestamp(endpointHit.getTimestamp());
+        return endpointHitDto;
     }
 
-    public static EndpointHit toEndpointHit(EndpointHitDto endpointHitDto) {
-        return new EndpointHit(endpointHitDto.getId(), endpointHitDto.getApp(), endpointHitDto.getUri(),
-                endpointHitDto.getIp(), endpointHitDto.getTimestamp());
+    public static EndpointHit toEndpointHit(EndpointHitFromUserDto endpointHitFromUserDto) {
+        EndpointHit endpointHit = new EndpointHit();
+        endpointHit.setApp(endpointHitFromUserDto.getApp());
+        endpointHit.setUri(endpointHitFromUserDto.getUri());
+        endpointHit.setIp(endpointHitFromUserDto.getIp());
+        endpointHit.setTimestamp(endpointHitFromUserDto.getTimestamp());
+        return endpointHit;
     }
 }

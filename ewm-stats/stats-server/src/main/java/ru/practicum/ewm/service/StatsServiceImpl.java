@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.ewm.EndpointHitDto;
+import ru.practicum.ewm.EndpointHitFromUserDto;
 import ru.practicum.ewm.ViewStatsDto;
 import ru.practicum.ewm.model.EndpointHit;
 import ru.practicum.ewm.model.StatsMapper;
@@ -29,11 +30,11 @@ public class StatsServiceImpl implements StatsService {
 
     @Transactional
     @Override
-    public EndpointHitDto createEndpointHit(EndpointHitDto endpointHitDto) {
-        EndpointHit endpointHit = StatsMapper.toEndpointHit(endpointHitDto);
-        EndpointHit endpointHitFromRepository = repository.save(endpointHit);
-        log.info(String.format("Данные о запросе пользователя сохранены в базе: id # %d.", endpointHitFromRepository.getId()));
-        return StatsMapper.toEndpointHitDto(endpointHitFromRepository);
+    public EndpointHitDto createEndpointHit(EndpointHitFromUserDto endpointHitFromUserDto) {
+        EndpointHit endpointHit = StatsMapper.toEndpointHit(endpointHitFromUserDto);
+        EndpointHit savedEndPointHit = repository.save(endpointHit);
+        log.info(String.format("Данные о запросе пользователя сохранены в базе: id # %d.", savedEndPointHit.getId()));
+        return StatsMapper.toEndpointHitDto(savedEndPointHit);
     }
 
     @Override

@@ -37,7 +37,7 @@ public class NewEventDto {
     Long participantLimit;
 
     @NotNull
-    LocationDto location;
+    ru.practicum.ewm.event.model.LocationDto location;
 
     @NotNull
     Long category;

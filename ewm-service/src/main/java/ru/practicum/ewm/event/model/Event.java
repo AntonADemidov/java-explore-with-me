@@ -36,7 +36,7 @@ public class Event {
 
     @Column(name = "event_state", nullable = false)
     @Enumerated(EnumType.STRING)
-    State state;
+    ru.practicum.ewm.event.model.State state;
 
     @Column(name = "event_date", nullable = false)
     LocalDateTime eventDate;
@@ -58,7 +58,7 @@ public class Event {
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "location_id", nullable = false)
-    Location location;
+    ru.practicum.ewm.event.model.Location location;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id", nullable = false)
@@ -73,9 +73,4 @@ public class Event {
 
     @ManyToMany(mappedBy = "events")
     Set<Compilation> compilations;
-
-    //TODO
-    /*
-    Long views;
-     */
 }

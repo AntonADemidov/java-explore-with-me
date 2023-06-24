@@ -19,9 +19,9 @@ import java.util.Map;
 public class StatsClient {
     static final String BASE_URL = "https://localhost:9090";
 
-    public ResponseEntity<Object> createEndpointHit(EndpointHitDto endpointHitDto) {
+    public ResponseEntity<Object> createEndpointHit(EndpointHitFromUserDto endpointHitFromUserDto) {
         RestTemplate rest = createRestTemplate("/hit");
-        return makeAndSendRequest(rest, HttpMethod.POST, "", null, endpointHitDto);
+        return makeAndSendRequest(rest, HttpMethod.POST, "", null, endpointHitFromUserDto);
     }
 
     public ResponseEntity<Object> getViewStats(String start, String end, List<String> uris, Boolean unique) {

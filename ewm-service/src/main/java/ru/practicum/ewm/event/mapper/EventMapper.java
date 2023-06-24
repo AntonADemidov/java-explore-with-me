@@ -42,7 +42,7 @@ public class EventMapper {
         eventFullDto.setPaid(event.getPaid());
         eventFullDto.setRequestModeration(event.getRequestModeration());
         eventFullDto.setParticipantLimit(event.getParticipantLimit());
-        eventFullDto.setLocation(LocationMapper.toLocationDto(event.getLocation()));
+        eventFullDto.setLocation(ru.practicum.ewm.event.mapper.LocationMapper.toLocationDto(event.getLocation()));
         eventFullDto.setCategory(CategoryMapper.toCategoryDto(event.getCategory()));
         eventFullDto.setInitiator(UserMapper.toUserShortDto(event.getInitiator()));
         eventFullDto.setConfirmedRequests(getConfirmedRequests(event));
