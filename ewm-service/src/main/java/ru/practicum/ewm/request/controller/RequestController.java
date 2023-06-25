@@ -55,7 +55,6 @@ public class RequestController {
         return requestService.updateRequestsStatusByEventOwner(userId, eventId, request);
     }
 
-    //TODO
     @GetMapping("/events/{eventId}/requests")
     public List<RequestDto> getRequestByEventOwner(@PathVariable @Positive Long userId,
                                                    @PathVariable @Positive Long eventId) {

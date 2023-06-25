@@ -1,4 +1,4 @@
-package ru.practicum.ewm;
+package ru.practicum.ewm.util;
 
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;

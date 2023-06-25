@@ -10,13 +10,10 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.practicum.ewm.PageNumber;
-import ru.practicum.ewm.compilation.exception.CompilationNotFoundException;
+import ru.practicum.ewm.util.PageNumber;
+import ru.practicum.ewm.util.exception.compilation.CompilationNotFoundException;
 import ru.practicum.ewm.compilation.mapper.CompilationMapper;
-import ru.practicum.ewm.compilation.model.Compilation;
-import ru.practicum.ewm.compilation.model.CompilationDto;
-import ru.practicum.ewm.compilation.model.NewCompilationDto;
-import ru.practicum.ewm.compilation.model.UpdateCompilationRequest;
+import ru.practicum.ewm.compilation.model.*;
 import ru.practicum.ewm.compilation.repository.CompilationRepository;
 import ru.practicum.ewm.event.model.Event;
 import ru.practicum.ewm.event.service.EventService;
@@ -28,7 +25,7 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @Service
-@Transactional
+@Transactional(readOnly = true)
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class CompilationServiceImpl implements CompilationService {
@@ -36,6 +33,7 @@ public class CompilationServiceImpl implements CompilationService {
     EventService eventService;
 
     @Override
+    @Transactional
     public CompilationDto createCompilation(NewCompilationDto newCompilationDto) {
         Set<Event> events = new HashSet<>();
 
@@ -56,6 +54,7 @@ public class CompilationServiceImpl implements CompilationService {
     }
 
     @Override
+    @Transactional
     public CompilationDto updateCompilation(Long compId, UpdateCompilationRequest request) {
         Compilation compilation = getById(compId);
 
@@ -83,6 +82,7 @@ public class CompilationServiceImpl implements CompilationService {
     }
 
     @Override
+    @Transactional
     public void deleteCompilationById(Long compId) {
         Compilation compilation = getById(compId);
         compilationRepository.delete(compilation);
@@ -90,7 +90,6 @@ public class CompilationServiceImpl implements CompilationService {
     }
 
     @Override
-    @Transactional(readOnly = true)
     public CompilationDto getCompilationById(Long compId) {
         CompilationDto compilationDto = CompilationMapper.toCompilationDto(getById(compId));
         log.info("Подборка найдена: compId={}.", compilationDto.getId());
@@ -100,12 +99,18 @@ public class CompilationServiceImpl implements CompilationService {
     @Override
     public List<CompilationDto> getCompilations(Boolean pinned, Integer from, Integer size) {
         Pageable request = PageRequest.of(PageNumber.get(from, size), size);
-        Page<Compilation> requestPage = compilationRepository.findAllByPinnedEquals(pinned, request);
-        List<Compilation> compilations = requestPage.getContent();
 
-        List<CompilationDto> compilationDtos = compilations.stream()
+        Page<Compilation> requestPage;
+        if (pinned != null) {
+            requestPage = compilationRepository.findAllByPinnedEquals(pinned, request);
+        } else {
+            requestPage = compilationRepository.findAll(request);
+        }
+
+        List<CompilationDto> compilationDtos = requestPage.getContent().stream()
                 .map(CompilationMapper::toCompilationDto)
                 .collect(Collectors.toList());
+
         log.info("Список подборок событий сформирован: количество элементов={}.", compilationDtos.size());
         return compilationDtos;
     }

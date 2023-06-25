@@ -10,8 +10,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.practicum.ewm.PageNumber;
-import ru.practicum.ewm.user.exception.UserNotFoundException;
+import ru.practicum.ewm.util.PageNumber;
+import ru.practicum.ewm.util.exception.user.UserNotFoundException;
 import ru.practicum.ewm.user.mapper.UserMapper;
 import ru.practicum.ewm.user.model.NewUserRequest;
 import ru.practicum.ewm.user.model.User;
@@ -49,17 +49,6 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-    private List<UserDto> getUserList(Page<User> requestPage) {
-        List<User> users = requestPage.getContent();
-
-        List<UserDto> userDtos = users.stream()
-                .map(UserMapper::toUserDto)
-                .collect(Collectors.toList());
-
-        log.info("Список пользователей сформирован: количество элементов={}.", userDtos.size());
-        return userDtos;
-    }
-
     @Override
     @Transactional
     public void deleteUserById(Long id) {
@@ -72,5 +61,16 @@ public class UserServiceImpl implements UserService {
     public User getUserById(Long id) {
         return userRepository.findById(id).orElseThrow(() ->
                 new UserNotFoundException(String.format("Пользователь с id #%d отсутствует в базе.", id)));
+    }
+
+    private List<UserDto> getUserList(Page<User> requestPage) {
+        List<User> users = requestPage.getContent();
+
+        List<UserDto> userDtos = users.stream()
+                .map(UserMapper::toUserDto)
+                .collect(Collectors.toList());
+
+        log.info("Список пользователей сформирован: количество элементов={}.", userDtos.size());
+        return userDtos;
     }
 }

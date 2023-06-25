@@ -3,6 +3,7 @@ package ru.practicum.ewm.event.model;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
+import lombok.experimental.NonFinal;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.beans.factory.annotation.Value;
 
@@ -27,18 +28,19 @@ public class NewEventDto {
     @NotBlank
     String eventDate;
 
-    @Value("false")
-    Boolean paid;
+    boolean paid;
 
-    @Value("true")
     Boolean requestModeration;
 
-    @Value("0")
-    Long participantLimit;
+    long participantLimit;
 
     @NotNull
     ru.practicum.ewm.event.model.LocationDto location;
 
     @NotNull
     Long category;
+
+    public boolean getPaid() {
+        return paid;
+    }
 }

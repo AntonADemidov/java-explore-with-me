@@ -10,8 +10,8 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.ewm.event.model.Event;
 import ru.practicum.ewm.event.model.State;
 import ru.practicum.ewm.event.service.EventService;
-import ru.practicum.ewm.request.exception.RequestNotFoundException;
-import ru.practicum.ewm.request.exception.RequestValidationException;
+import ru.practicum.ewm.util.exception.request.RequestNotFoundException;
+import ru.practicum.ewm.util.exception.request.RequestValidationException;
 import ru.practicum.ewm.request.mapper.RequestMapper;
 import ru.practicum.ewm.request.model.*;
 import ru.practicum.ewm.request.repository.RequestRepository;
@@ -110,7 +110,7 @@ public class RequestServiceImpl implements RequestService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<RequestDto> getRequestByEventOwner(Long eventId, Long userId) {
+    public List<RequestDto> getRequestByEventOwner(Long userId, Long eventId) {
         User user = userService.getUserById(userId);
         Event event = eventService.getEventById(eventId);
 
@@ -203,10 +203,24 @@ public class RequestServiceImpl implements RequestService {
         }
     }
 
-    private RequestState getRequestStatus(Event event) {
+    /*private RequestState getRequestStatus(Event event) {
         RequestState state;
         if (event.getRequestModeration() || event.getParticipantLimit() == 0) {
             state = RequestState.PENDING;
+        } else {
+            state = RequestState.CONFIRMED;
+        }
+        return state;
+    }*/
+
+    private RequestState getRequestStatus(Event event) {
+        RequestState state;
+        if (event.getRequestModeration()) {
+            if (event.getParticipantLimit() == 0) {
+                state = RequestState.CONFIRMED;
+            } else {
+                state = RequestState.PENDING;
+            }
         } else {
             state = RequestState.CONFIRMED;
         }

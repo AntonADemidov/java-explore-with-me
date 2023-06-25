@@ -7,17 +7,18 @@ import ru.practicum.ewm.request.model.RequestStateUpdateResult;
 
 import java.util.List;
 
-@Transactional
+@Transactional(readOnly = true)
 public interface RequestService {
+    @Transactional
     RequestDto createRequest(Long userId, Long eventId);
 
-    @Transactional(readOnly = true)
     List<RequestDto> getRequestsOfUser(Long userId);
 
+    @Transactional
     RequestDto cancelRequest(Long userId, Long requestId);
 
+    @Transactional
     RequestStateUpdateResult updateRequestsStatusByEventOwner(Long userId, Long eventId, RequestStateUpdateRequest request);
 
-    @Transactional(readOnly = true)
     List<RequestDto> getRequestByEventOwner(Long userId, Long eventId);
 }

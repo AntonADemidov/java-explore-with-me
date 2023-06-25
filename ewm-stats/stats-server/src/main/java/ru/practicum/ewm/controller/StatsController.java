@@ -1,6 +1,7 @@
 package ru.practicum.ewm.controller;
 
 import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,15 +22,11 @@ import java.util.List;
 @RestController
 @Validated
 @Slf4j
+@RequiredArgsConstructor(onConstructor_ = @Autowired)
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class StatsController {
     StatsService statsService;
     static DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-
-    @Autowired
-    public StatsController(StatsServiceImpl statsService) {
-        this.statsService = statsService;
-    }
 
     @PostMapping("/hit")
     public EndpointHitDto createEndpointHit(@RequestBody @Valid EndpointHitFromUserDto endpointHitFromUserDto) {

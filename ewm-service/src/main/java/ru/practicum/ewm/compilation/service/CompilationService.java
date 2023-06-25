@@ -7,12 +7,15 @@ import ru.practicum.ewm.compilation.model.UpdateCompilationRequest;
 
 import java.util.List;
 
-@Transactional
+@Transactional(readOnly = true)
 public interface CompilationService {
+    @Transactional
     CompilationDto createCompilation(NewCompilationDto compilationDto);
 
+    @Transactional
     CompilationDto updateCompilation(Long compId, UpdateCompilationRequest request);
 
+    @Transactional
     void deleteCompilationById(Long compId);
 
     CompilationDto getCompilationById(Long compId);

@@ -32,7 +32,6 @@ public class EventAdminController {
         return eventService.updateEventByAdmin(eventId, updateEventRequest);
     }
 
-    //ToDO
     @GetMapping
     public List<EventFullDto> getEventsByAdmin(@RequestParam(value = "users", required = false) List<Long> users,
                                                @RequestParam(value = "states", required = false) List<String> states,

@@ -10,8 +10,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.practicum.ewm.PageNumber;
-import ru.practicum.ewm.category.exception.CategoryNotFoundException;
+import ru.practicum.ewm.util.PageNumber;
+import ru.practicum.ewm.util.exception.category.CategoryNotFoundException;
 import ru.practicum.ewm.category.mapper.CategoryMapper;
 import ru.practicum.ewm.category.model.Category;
 import ru.practicum.ewm.category.model.CategoryDto;
@@ -23,13 +23,14 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @Service
-@Transactional
+@Transactional(readOnly = true)
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class CategoryServiceImpl implements CategoryService {
     CategoryRepository categoryRepository;
 
     @Override
+    @Transactional
     public CategoryDto createCategory(NewCategoryDto newCategoryDto) {
         Category category = categoryRepository.save(CategoryMapper.toCategory(newCategoryDto));
         CategoryDto categoryDto = CategoryMapper.toCategoryDto(category);
@@ -38,6 +39,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
+    @Transactional
     public CategoryDto updateCategory(NewCategoryDto newCategoryDto, Long id) {
         Category category = getById(id);
         category.setName(newCategoryDto.getName());
@@ -47,6 +49,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
+    @Transactional
     public void deleteCategoryById(Long id) {
         Category category = getById(id);
         categoryRepository.delete(category);
@@ -54,7 +57,6 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    @Transactional(readOnly = true)
     public List<CategoryDto> getCategories(Integer from, Integer size) {
         Pageable request = PageRequest.of(PageNumber.get(from, size), size);
         Page<Category> requestPage = categoryRepository.findAll(request);
@@ -69,7 +71,6 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    @Transactional(readOnly = true)
     public CategoryDto getCategoryById(Long id) {
         CategoryDto categoryDto = CategoryMapper.toCategoryDto(getById(id));
         log.info("Просмотр категории: {}.", categoryDto);

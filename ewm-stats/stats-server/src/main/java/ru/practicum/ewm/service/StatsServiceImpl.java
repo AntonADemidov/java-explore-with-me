@@ -1,6 +1,7 @@
 package ru.practicum.ewm.service;
 
 import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,14 +20,10 @@ import java.util.List;
 @Service
 @Slf4j
 @Transactional(readOnly = true)
+@RequiredArgsConstructor(onConstructor_ = @Autowired)
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class StatsServiceImpl implements StatsService {
     StatsRepository repository;
-
-    @Autowired
-    public StatsServiceImpl(StatsRepository repository) {
-        this.repository = repository;
-    }
 
     @Transactional
     @Override
