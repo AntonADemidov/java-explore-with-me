@@ -5,12 +5,14 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.ewm.event.model.EventFullDto;
 import ru.practicum.ewm.event.model.EventShortDto;
 import ru.practicum.ewm.event.service.EventService;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
 import java.util.List;
@@ -33,15 +35,20 @@ public class EventPublicController {
                                                @RequestParam(value = "onlyAvailable", required = false, defaultValue = "false") Boolean onlyAvailable,
                                                @RequestParam(value = "sort", required = false, defaultValue = "EVENT_DATE") String sort,
                                                @RequestParam(value = "from", required = false, defaultValue = "0") @PositiveOrZero Integer from,
-                                               @RequestParam(value = "size", required = false, defaultValue = "10") @PositiveOrZero Integer size) {
+                                               @RequestParam(value = "size", required = false, defaultValue = "10") @PositiveOrZero Integer size,
+                                               HttpServletRequest request) {
         log.info("Получение списка событий по параметрам: text={}, categories={}, paid={}, rangeStart={}, rangeEnd={}, onlyAvailable={}, sort={}, from={}, size={}.",
                 text, categories, paid, rangeStart, rangeEnd, onlyAvailable, sort, from, size);
-        return eventService.getPublicEvents(text, categories, paid, rangeStart, rangeEnd, onlyAvailable, sort, from, size);
+        log.info("IP-адрес пользователя: ip={}.", request.getRemoteAddr());
+        log.info("Эндпойнт: endpoint={}.", request.getRequestURI());
+        return eventService.getPublicEvents(text, categories, paid, rangeStart, rangeEnd, onlyAvailable, sort, from, size, request);
     }
 
     @GetMapping("/{id}")
-    public EventFullDto getPublicEventById(@PathVariable @Positive Long id) {
+    public EventFullDto getPublicEventById(@PathVariable @Positive Long id, HttpServletRequest request) {
         log.info("Получение события: eventId={}.", id);
-        return eventService.getPublicEventById(id);
+        log.info("IP-адрес пользователя: ip={}.", request.getRemoteAddr());
+        log.info("Эндпойнт: endpoint={}.", request.getRequestURI());
+        return eventService.getPublicEventById(id, request);
     }
 }

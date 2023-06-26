@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.ewm.EndpointHitDto;
@@ -26,9 +27,10 @@ import java.util.List;
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class StatsController {
     StatsService statsService;
-    static DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    //static DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     @PostMapping("/hit")
+    @ResponseStatus(HttpStatus.CREATED)
     public EndpointHitDto createEndpointHit(@RequestBody @Valid EndpointHitFromUserDto endpointHitFromUserDto) {
         //LocalDateTime timestamp = LocalDateTime.parse(endpointHitFromUserDto.getTimestamp(), FORMATTER);
         //EndpointHitDto endpointHitDto = StatsMapper.toEndpointHitDto(endpointHitFromUserDto, timestamp);
@@ -37,13 +39,16 @@ public class StatsController {
     }
 
     @GetMapping("/stats")
-    public List<ViewStatsDto> getViewStats(@RequestParam String start, @RequestParam String end,
+    public List<ViewStatsDto> getViewStats(@RequestParam String start,
+                                           @RequestParam String end,
                                            @RequestParam(required = false) List<String> uris,
                                            @RequestParam(required = false, defaultValue = "false") Boolean unique) {
-        LocalDateTime startTime = LocalDateTime.parse(start, FORMATTER);
-        LocalDateTime endTime = LocalDateTime.parse(end, FORMATTER);
+        //LocalDateTime startTime = LocalDateTime.parse(start, FORMATTER);
+        //LocalDateTime endTime = LocalDateTime.parse(end, FORMATTER);
         log.info("Получение статистики о запросах пользователей: start={}, end={}, unique={}, uris={}",
-                startTime, endTime, unique, uris);
-        return statsService.getViewStats(startTime, endTime, uris, unique);
+                start, end, unique, uris);
+        List<ViewStatsDto> list = statsService.getViewStats(start, end, uris, unique);
+        log.info("Лист получен: {}", list);
+        return list;
     }
 }

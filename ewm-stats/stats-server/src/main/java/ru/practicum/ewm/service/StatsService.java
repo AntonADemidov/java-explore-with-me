@@ -14,5 +14,5 @@ public interface StatsService {
     @Transactional
     EndpointHitDto createEndpointHit(EndpointHitFromUserDto endpointHitFromUserDto);
 
-    List<ViewStatsDto> getViewStats(LocalDateTime start, LocalDateTime end, List<String> uris, Boolean unique);
+    List<ViewStatsDto> getViewStats(String start, String end, List<String> uris, Boolean unique);
 }

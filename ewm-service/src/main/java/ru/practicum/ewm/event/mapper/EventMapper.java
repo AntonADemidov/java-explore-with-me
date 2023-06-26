@@ -2,6 +2,7 @@ package ru.practicum.ewm.event.mapper;
 
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
+import org.springframework.lang.Nullable;
 import ru.practicum.ewm.category.mapper.CategoryMapper;
 import ru.practicum.ewm.event.model.Event;
 import ru.practicum.ewm.event.model.EventFullDto;
@@ -46,6 +47,12 @@ public class EventMapper {
         eventFullDto.setCategory(CategoryMapper.toCategoryDto(event.getCategory()));
         eventFullDto.setInitiator(UserMapper.toUserShortDto(event.getInitiator()));
         eventFullDto.setConfirmedRequests(getConfirmedRequests(event));
+        return eventFullDto;
+    }
+
+    public static EventFullDto toEventFullDto(Event event, Integer views) {
+        EventFullDto eventFullDto = toEventFullDto(event);
+        eventFullDto.setViews(views);
         return eventFullDto;
     }
 

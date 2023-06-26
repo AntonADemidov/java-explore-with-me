@@ -21,5 +21,5 @@ public class EndpointHitFromUserDto {
     @NotBlank
     String ip;
     @NotBlank
-    LocalDateTime timestamp;
+    String timestamp;
 }

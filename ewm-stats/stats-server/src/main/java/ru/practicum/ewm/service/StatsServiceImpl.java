@@ -15,6 +15,7 @@ import ru.practicum.ewm.model.StatsMapper;
 import ru.practicum.ewm.repository.StatsRepository;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Service
@@ -23,6 +24,7 @@ import java.util.List;
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class StatsServiceImpl implements StatsService {
+    static DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
     StatsRepository repository;
 
     @Transactional
@@ -35,19 +37,24 @@ public class StatsServiceImpl implements StatsService {
     }
 
     @Override
-    public List<ViewStatsDto> getViewStats(LocalDateTime start, LocalDateTime end, List<String> uris, Boolean unique) {
+    public List<ViewStatsDto> getViewStats(String start, String end, List<String> uris, Boolean unique) {
+        LocalDateTime startTime = LocalDateTime.parse(start, FORMATTER);
+        LocalDateTime endTime = LocalDateTime.parse(end, FORMATTER);
+
+        List<ViewStatsDto> list;
         if (unique) {
             if (uris != null) {
-                return repository.getViewStatsWithUniqueIpForUriList(start, end, uris);
+                list = repository.getViewStatsWithUniqueIpForUriList(startTime, endTime, uris);
             } else {
-                return repository.getViewStatsWithUniqueIpWithoutUriList(start, end);
+                list = repository.getViewStatsWithUniqueIpWithoutUriList(startTime, endTime);
             }
         } else {
             if (uris != null) {
-                return repository.getAllViewStatsForUriLIst(start, end, uris);
+                list = repository.getAllViewStatsForUriLIst(startTime, endTime, uris);
             } else {
-                return repository.getAllViewStatsWithoutUriList(start, end);
+                list = repository.getAllViewStatsWithoutUriList(startTime, endTime);
             }
         }
+        return list;
     }
 }

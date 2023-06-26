@@ -9,8 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.practicum.ewm.EndpointHitFromUserDto;
 import ru.practicum.ewm.util.PageNumber;
 import ru.practicum.ewm.StatsClient;
 import ru.practicum.ewm.category.model.Category;
@@ -27,11 +29,11 @@ import ru.practicum.ewm.request.model.RequestState;
 import ru.practicum.ewm.user.model.User;
 import ru.practicum.ewm.user.service.UserService;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -46,6 +48,7 @@ public class EventServiceImpl implements ru.practicum.ewm.event.service.EventSer
     UserService userService;
     CategoryService categoryService;
     StatsClient statsClient;
+    String app = "ewm-service";
 
     @Override
     @Transactional
@@ -167,7 +170,10 @@ public class EventServiceImpl implements ru.practicum.ewm.event.service.EventSer
 
     @Override
     public List<EventShortDto> getPublicEvents(String text, List<Long> categories, Boolean paid, String rangeStart,
-                                               String rangeEnd, Boolean onlyAvailable, String sort, Integer from, Integer size) {
+                                               String rangeEnd, Boolean onlyAvailable, String sort, Integer from, Integer size,
+                                               HttpServletRequest httpServletRequest) {
+        String timestamp = LocalDateTime.now().format(FORMATTER);
+
         Pageable request = PageRequest.of(PageNumber.get(from, size), size);
         Comparator<EventShortDto> comparator = getComparator(sort);
         List<BooleanExpression> conditions = new ArrayList<>();
@@ -202,27 +208,51 @@ public class EventServiceImpl implements ru.practicum.ewm.event.service.EventSer
     }
 
     @Override
-    public EventFullDto getPublicEventById(Long eventId) {
+    public EventFullDto getPublicEventById(Long eventId, HttpServletRequest httpServletRequest) {
+        String timestamp = LocalDateTime.now().format(FORMATTER);
         Event event = getEventById(eventId);
 
         if (!event.getState().equals(State.PUBLISHED)) {
             throw new EventNotFoundException(String.format("Меропритие с eventId=%d не опубликовано.", event.getId()));
         }
 
-        /*EndpointHitFromUserDto endpointHitFromUserDto = new EndpointHitFromUserDto();
-        endpointHitFromUserDto.setApp("ewm-service");
-        endpointHitFromUserDto.setUri(String.format("/events/%d", event.getId()));
-        endpointHitFromUserDto.setIp("192.163.0.1");
-        endpointHitFromUserDto.setTimestamp(LocalDateTime.now());
-
-        ResponseEntity<Object> response = statsClient.createEndpointHit(endpointHitFromUserDto);
-        System.out.println(response);*/
-
-        EventFullDto eventFullDto = EventMapper.toEventFullDto(event);
+        Integer views = saveAndGetStats(httpServletRequest.getRequestURI(), httpServletRequest.getRemoteAddr(), timestamp);
+        EventFullDto eventFullDto = EventMapper.toEventFullDto(event, views);
         log.info("Просмотр события по eventId={}.", eventFullDto.getId());
         return eventFullDto;
     }
 
+    private Integer saveAndGetStats(String uri, String ip, String timestamp) {
+        EndpointHitFromUserDto endpointHitFromUserDto = getEndpointHitFromUserDto(uri, ip, timestamp);
+        statsClient.createEndpointHit(endpointHitFromUserDto);
+        log.info("Статистика обращения к эндпоинту {} сохранена.", endpointHitFromUserDto.getUri());
+        return getViews(endpointHitFromUserDto);
+    }
+
+    private Integer getViews(EndpointHitFromUserDto endpointHitFromUserDto) {
+        ResponseEntity<Object> response = statsClient.getViewStats(
+                LocalDateTime.now().minusMinutes(1).format(FORMATTER),
+                LocalDateTime.now().plusMinutes(1).format(FORMATTER),
+                List.of(endpointHitFromUserDto.getUri()),
+                false
+        );
+
+        ArrayList<LinkedHashMap<String, Object>> arrayList = (ArrayList<LinkedHashMap<String, Object>>) response.getBody();
+        LinkedHashMap<String, Object> linkedHashMap = arrayList.get(0);
+        Object hits = linkedHashMap.get("hits");
+        Integer views = (Integer) hits;
+        log.info("Статистика обращения к эндпоинту {} получена: views={}.", endpointHitFromUserDto.getUri(), views);
+        return views;
+    }
+
+    private EndpointHitFromUserDto getEndpointHitFromUserDto(String uri, String ip, String timestamp) {
+        EndpointHitFromUserDto endpointHitFromUserDto = new EndpointHitFromUserDto();
+        endpointHitFromUserDto.setApp(app);
+        endpointHitFromUserDto.setUri(uri);
+        endpointHitFromUserDto.setIp(ip);
+        endpointHitFromUserDto.setTimestamp(timestamp);
+        return endpointHitFromUserDto;
+    }
 
     private void validateEventDate(Event event, int interval) {
         LocalDateTime current = LocalDateTime.now();
