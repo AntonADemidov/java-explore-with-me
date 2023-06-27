@@ -7,10 +7,11 @@
         <groupId>ru.practicum</groupId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>
-    <modelVersion>4.0.0</modelVersion>
 
+    <modelVersion>4.0.0</modelVersion>
     <artifactId>ewm-stats</artifactId>
     <packaging>pom</packaging>
+
     <modules>
         <module>stats-client</module>
         <module>stats-dto</module>

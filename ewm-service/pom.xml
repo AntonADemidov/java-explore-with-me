@@ -7,9 +7,11 @@
         <groupId>ru.practicum</groupId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>
-    <modelVersion>4.0.0</modelVersion>
 
+    <modelVersion>4.0.0</modelVersion>
     <artifactId>ewm-service</artifactId>
+
+    <name>Ewm Service</name>
 
     <properties>
         <maven.compiler.source>11</maven.compiler.source>
