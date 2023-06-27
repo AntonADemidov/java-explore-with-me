@@ -21,7 +21,7 @@ public class StatsClient {
     static String BASE_URL;
 
     public StatsClient(@Value("${stats-server.url}") String baseUrl) {
-        this.BASE_URL = baseUrl;
+        BASE_URL = baseUrl;
     }
 
     public void createEndpointHit(EndpointHitFromUserDto endpointHitFromUserDto) {
