@@ -11,6 +11,7 @@ import java.time.format.DateTimeFormatter;
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class StatsMapper {
     static DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
     public static EndpointHitDto toEndpointHitDto(EndpointHit endpointHit) {
         EndpointHitDto endpointHitDto = new EndpointHitDto();
         endpointHitDto.setId(endpointHit.getId());

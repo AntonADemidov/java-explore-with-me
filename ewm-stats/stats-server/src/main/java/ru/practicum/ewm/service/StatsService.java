@@ -5,7 +5,6 @@ import ru.practicum.ewm.EndpointHitDto;
 import ru.practicum.ewm.EndpointHitFromUserDto;
 import ru.practicum.ewm.ViewStatsDto;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Transactional(readOnly = true)

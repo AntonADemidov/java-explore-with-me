@@ -2,7 +2,8 @@ package ru.practicum.ewm.event.mapper;
 
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
-import org.springframework.lang.Nullable;
+import org.springframework.http.ResponseEntity;
+import ru.practicum.ewm.StatsClient;
 import ru.practicum.ewm.category.mapper.CategoryMapper;
 import ru.practicum.ewm.event.model.Event;
 import ru.practicum.ewm.event.model.EventFullDto;
@@ -13,6 +14,9 @@ import ru.practicum.ewm.user.mapper.UserMapper;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
 
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class EventMapper {
@@ -50,11 +54,33 @@ public class EventMapper {
         return eventFullDto;
     }
 
-    public static EventFullDto toEventFullDto(Event event, Integer views) {
+    public static EventFullDto toEventFullDto(Event event, String uri, StatsClient statsClient) {
+        EventFullDto eventFullDto = toEventFullDto(event);
+        eventFullDto.setViews(getStats(event, uri, statsClient));
+        return eventFullDto;
+    }
+
+    private static Integer getStats(Event event, String uri, StatsClient statsClient) {
+        ResponseEntity<Object> response = statsClient.getViewStats(
+                event.getCreatedOn().format(FORMATTER),
+                event.getEventDate().plusYears(100).format(FORMATTER),
+                List.of(uri),
+                true
+        );
+
+        ArrayList<LinkedHashMap<String, Object>> arrayList = (ArrayList<LinkedHashMap<String, Object>>) response.getBody();
+        LinkedHashMap<String, Object> linkedHashMap = arrayList.get(0);
+        Object hits = linkedHashMap.get("hits");
+        Integer views = (Integer) hits;
+        return views;
+    }
+
+
+    /*public static EventFullDto toEventFullDto(Event event, Integer views) {
         EventFullDto eventFullDto = toEventFullDto(event);
         eventFullDto.setViews(views);
         return eventFullDto;
-    }
+    }*/
 
     public static EventShortDto toEventShortDto(Event event) {
         EventShortDto eventShortDto = new EventShortDto();

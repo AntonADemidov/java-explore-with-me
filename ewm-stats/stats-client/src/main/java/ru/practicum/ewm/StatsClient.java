@@ -27,17 +27,18 @@ public class StatsClient {
     public ResponseEntity<Object> getViewStats(String start, String end, List<String> uris, Boolean unique) {
         RestTemplate rest = createRestTemplate("/stats");
 
-        String paramsUri = "";
+        StringBuilder builder = new StringBuilder();
         if (uris != null && !uris.isEmpty()) {
             int size = uris.size();
             for (int i = 0; i < size; i++) {
-                paramsUri = paramsUri + uris.get(i);
+                builder.append(uris.get(i));
 
                 if ((i + 1) != size) {
-                    paramsUri = paramsUri + "&uris=";
+                    builder.append("&uris=");
                 }
             }
         }
+        String paramsUri = builder.toString();
 
         Map<String, Object> parameters = Map.of(
                 "start", start,
@@ -52,7 +53,7 @@ public class StatsClient {
 
     private RestTemplate createRestTemplate(String prefix) {
         return new RestTemplateBuilder()
-                .uriTemplateHandler(new DefaultUriBuilderFactory(String.format("%s%s",BASE_URL, prefix)))
+                .uriTemplateHandler(new DefaultUriBuilderFactory(String.format("%s%s", BASE_URL, prefix)))
                 .requestFactory(HttpComponentsClientHttpRequestFactory::new)
                 .build();
     }

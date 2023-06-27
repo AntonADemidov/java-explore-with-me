@@ -13,7 +13,7 @@ public interface RequestRepository extends JpaRepository<Request, Long> {
 
     List<Request> findByRequesterEquals(User requester);
 
-    List<Request> findByIdIn(List<Long> Ids);
+    List<Request> findByIdIn(List<Long> list);
 
     List<Request> findByEventEquals(Event event);
 }

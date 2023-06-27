@@ -1,4 +1,4 @@
-package ru.practicum.ewm.util;
+package ru.practicum.ewm;
 
 import lombok.AccessLevel;
 import lombok.Data;

@@ -1,6 +1,5 @@
 package ru.practicum.ewm.event.service;
 
-import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.ewm.event.model.*;
 
@@ -30,8 +29,6 @@ public interface EventService {
     EventFullDto getPublicEventById(Long eventId, HttpServletRequest request);
 
     List<EventShortDto> getPublicEvents(String text, List<Long> categories, Boolean paid, String rangeStart,
-                                       String rangeEnd, Boolean onlyAvailable, String sort, Integer from, Integer size,
+                                        String rangeEnd, Boolean onlyAvailable, String sort, Integer from, Integer size,
                                         HttpServletRequest request);
-
-    //ResponseEntity<EventFullDto> getPublicEventById(Long id);
 }

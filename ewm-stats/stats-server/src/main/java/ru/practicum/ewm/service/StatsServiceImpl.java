@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.practicum.ewm.DateValidationException;
 import ru.practicum.ewm.EndpointHitDto;
 import ru.practicum.ewm.EndpointHitFromUserDto;
 import ru.practicum.ewm.ViewStatsDto;
@@ -27,8 +28,8 @@ public class StatsServiceImpl implements StatsService {
     static DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
     StatsRepository repository;
 
-    @Transactional
     @Override
+    @Transactional
     public EndpointHitDto createEndpointHit(EndpointHitFromUserDto endpointHitFromUserDto) {
         EndpointHit endpointHit = StatsMapper.toEndpointHit(endpointHitFromUserDto);
         EndpointHit savedEndPointHit = repository.save(endpointHit);
@@ -40,21 +41,27 @@ public class StatsServiceImpl implements StatsService {
     public List<ViewStatsDto> getViewStats(String start, String end, List<String> uris, Boolean unique) {
         LocalDateTime startTime = LocalDateTime.parse(start, FORMATTER);
         LocalDateTime endTime = LocalDateTime.parse(end, FORMATTER);
+        validateDates(startTime, endTime);
 
-        List<ViewStatsDto> list;
         if (unique) {
             if (uris != null) {
-                list = repository.getViewStatsWithUniqueIpForUriList(startTime, endTime, uris);
+                return repository.getViewStatsWithUniqueIpForUriList(startTime, endTime, uris);
             } else {
-                list = repository.getViewStatsWithUniqueIpWithoutUriList(startTime, endTime);
+                return repository.getViewStatsWithUniqueIpWithoutUriList(startTime, endTime);
             }
         } else {
             if (uris != null) {
-                list = repository.getAllViewStatsForUriLIst(startTime, endTime, uris);
+                return repository.getAllViewStatsForUriLIst(startTime, endTime, uris);
             } else {
-                list = repository.getAllViewStatsWithoutUriList(startTime, endTime);
+                return repository.getAllViewStatsWithoutUriList(startTime, endTime);
             }
         }
-        return list;
+    }
+
+    private void validateDates(LocalDateTime start, LocalDateTime end) {
+        if (!start.isBefore(end)) {
+            throw new DateValidationException(String.format("Дата начала диапазона start=%s не может быть позднее даты окончания диапазона end=%s",
+                    start, end));
+        }
     }
 }

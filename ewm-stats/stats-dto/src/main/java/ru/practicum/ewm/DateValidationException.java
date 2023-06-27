@@ -1,9 +1,9 @@
-package ru.practicum.ewm.util.exception.event;
+package ru.practicum.ewm;
 
-public class EventDateValidationException extends RuntimeException {
+public class DateValidationException extends RuntimeException {
     String reason = "Некорректные параметры даты и времени.";
 
-    public EventDateValidationException(String message) {
+    public DateValidationException(String message) {
         super(message);
     }
 

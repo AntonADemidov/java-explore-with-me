@@ -9,17 +9,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.practicum.ewm.DateValidationException;
 import ru.practicum.ewm.EndpointHitFromUserDto;
-import ru.practicum.ewm.util.PageNumber;
 import ru.practicum.ewm.StatsClient;
 import ru.practicum.ewm.category.model.Category;
 import ru.practicum.ewm.category.service.CategoryService;
-import ru.practicum.ewm.util.exception.event.EventDateValidationException;
-import ru.practicum.ewm.util.exception.event.EventNotFoundException;
-import ru.practicum.ewm.util.exception.event.EventValidationException;
 import ru.practicum.ewm.event.mapper.EventMapper;
 import ru.practicum.ewm.event.mapper.LocationMapper;
 import ru.practicum.ewm.event.model.*;
@@ -28,12 +24,16 @@ import ru.practicum.ewm.event.repository.LocationRepository;
 import ru.practicum.ewm.request.model.RequestState;
 import ru.practicum.ewm.user.model.User;
 import ru.practicum.ewm.user.service.UserService;
+import ru.practicum.ewm.util.PageNumber;
+import ru.practicum.ewm.util.exception.event.EventNotFoundException;
+import ru.practicum.ewm.util.exception.event.EventValidationException;
 
-import javax.persistence.criteria.CriteriaBuilder;
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -48,7 +48,6 @@ public class EventServiceImpl implements ru.practicum.ewm.event.service.EventSer
     UserService userService;
     CategoryService categoryService;
     StatsClient statsClient;
-    String app = "ewm-service";
 
     @Override
     @Transactional
@@ -173,6 +172,8 @@ public class EventServiceImpl implements ru.practicum.ewm.event.service.EventSer
                                                String rangeEnd, Boolean onlyAvailable, String sort, Integer from, Integer size,
                                                HttpServletRequest httpServletRequest) {
         String timestamp = LocalDateTime.now().format(FORMATTER);
+        String uri = httpServletRequest.getRequestURI();
+        String ip = httpServletRequest.getRemoteAddr();
 
         Pageable request = PageRequest.of(PageNumber.get(from, size), size);
         Comparator<EventShortDto> comparator = getComparator(sort);
@@ -203,6 +204,8 @@ public class EventServiceImpl implements ru.practicum.ewm.event.service.EventSer
                     .sorted(comparator)
                     .collect(Collectors.toList());
         }
+
+        saveStats(uri, ip, timestamp);
         log.info("Список событий сформирован: количество элементов={}.", events.size());
         return events;
     }
@@ -210,43 +213,29 @@ public class EventServiceImpl implements ru.practicum.ewm.event.service.EventSer
     @Override
     public EventFullDto getPublicEventById(Long eventId, HttpServletRequest httpServletRequest) {
         String timestamp = LocalDateTime.now().format(FORMATTER);
+        String uri = httpServletRequest.getRequestURI();
+        String ip = httpServletRequest.getRemoteAddr();
         Event event = getEventById(eventId);
 
         if (!event.getState().equals(State.PUBLISHED)) {
             throw new EventNotFoundException(String.format("Меропритие с eventId=%d не опубликовано.", event.getId()));
         }
 
-        Integer views = saveAndGetStats(httpServletRequest.getRequestURI(), httpServletRequest.getRemoteAddr(), timestamp);
-        EventFullDto eventFullDto = EventMapper.toEventFullDto(event, views);
+        saveStats(uri, ip, timestamp);
+        EventFullDto eventFullDto = EventMapper.toEventFullDto(event, uri, statsClient);
         log.info("Просмотр события по eventId={}.", eventFullDto.getId());
         return eventFullDto;
     }
 
-    private Integer saveAndGetStats(String uri, String ip, String timestamp) {
+    private void saveStats(String uri, String ip, String timestamp) {
         EndpointHitFromUserDto endpointHitFromUserDto = getEndpointHitFromUserDto(uri, ip, timestamp);
         statsClient.createEndpointHit(endpointHitFromUserDto);
         log.info("Статистика обращения к эндпоинту {} сохранена.", endpointHitFromUserDto.getUri());
-        return getViews(endpointHitFromUserDto);
-    }
-
-    private Integer getViews(EndpointHitFromUserDto endpointHitFromUserDto) {
-        ResponseEntity<Object> response = statsClient.getViewStats(
-                LocalDateTime.now().minusMinutes(1).format(FORMATTER),
-                LocalDateTime.now().plusMinutes(1).format(FORMATTER),
-                List.of(endpointHitFromUserDto.getUri()),
-                false
-        );
-
-        ArrayList<LinkedHashMap<String, Object>> arrayList = (ArrayList<LinkedHashMap<String, Object>>) response.getBody();
-        LinkedHashMap<String, Object> linkedHashMap = arrayList.get(0);
-        Object hits = linkedHashMap.get("hits");
-        Integer views = (Integer) hits;
-        log.info("Статистика обращения к эндпоинту {} получена: views={}.", endpointHitFromUserDto.getUri(), views);
-        return views;
     }
 
     private EndpointHitFromUserDto getEndpointHitFromUserDto(String uri, String ip, String timestamp) {
         EndpointHitFromUserDto endpointHitFromUserDto = new EndpointHitFromUserDto();
+        String app = "ewm-service";
         endpointHitFromUserDto.setApp(app);
         endpointHitFromUserDto.setUri(uri);
         endpointHitFromUserDto.setIp(ip);
@@ -259,7 +248,7 @@ public class EventServiceImpl implements ru.practicum.ewm.event.service.EventSer
         LocalDateTime eventDate = event.getEventDate();
 
         if (!current.plusHours(interval).isBefore(eventDate)) {
-            throw new EventDateValidationException(String.format("До начала события должно быть не менее, чем %dч. от текущего момента. Начало события: %s",
+            throw new DateValidationException(String.format("До начала события должно быть не менее, чем %dч. от текущего момента. Начало события: %s",
                     interval, eventDate.format(FORMATTER)));
         }
     }
@@ -271,21 +260,21 @@ public class EventServiceImpl implements ru.practicum.ewm.event.service.EventSer
         if (request.getEventDate() != null) {
             LocalDateTime requestDate = LocalDateTime.parse(request.getEventDate(), FORMATTER);
             if (!current.plusHours(interval).isBefore(requestDate)) {
-                throw new EventDateValidationException(String.format("Новое время события должно быть не ранее, чем через %dч. от текущего момента. Начало события: %s",
+                throw new DateValidationException(String.format("Новое время события должно быть не ранее, чем через %dч. от текущего момента. Начало события: %s",
                         interval, requestDate.format(FORMATTER)));
             }
         }
     }
 
     private void getDateConditions(String rangeStart, String rangeEnd, List<BooleanExpression> conditions,
-                                              QEvent event, Boolean isNoDiapason) {
+                                   QEvent event, Boolean isNoDiapason) {
         LocalDateTime start;
         LocalDateTime end;
 
         if ((rangeStart != null) && (rangeEnd != null)) {
             start = LocalDateTime.parse(rangeStart, FORMATTER);
             end = LocalDateTime.parse(rangeEnd, FORMATTER);
-            dateValidation(start, end);
+            validateDates(start, end);
 
             conditions.add((event.eventDate.eq(start)).or(event.eventDate.gt(start)));
             conditions.add((event.eventDate.eq(end)).or(event.eventDate.lt(end)));
@@ -306,9 +295,9 @@ public class EventServiceImpl implements ru.practicum.ewm.event.service.EventSer
         }
     }
 
-    private void dateValidation(LocalDateTime start, LocalDateTime end) {
+    private void validateDates(LocalDateTime start, LocalDateTime end) {
         if (!start.isBefore(end)) {
-            throw new EventDateValidationException(String.format("Дата начала диапазона start=%s не может быть позднее даты окончания диапазона end=%s",
+            throw new DateValidationException(String.format("Дата начала диапазона start=%s не может быть позднее даты окончания диапазона end=%s",
                     start, end));
         }
     }
