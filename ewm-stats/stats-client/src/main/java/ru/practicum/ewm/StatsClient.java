@@ -18,10 +18,10 @@ import java.util.Map;
 @Component
 @FieldDefaults(makeFinal = true, level = AccessLevel.PROTECTED)
 public class StatsClient {
-    static String BASE_URL;
+    String baseUrl;
 
     public StatsClient(@Value("${stats-server.url}") String baseUrl) {
-        BASE_URL = baseUrl;
+        this.baseUrl = baseUrl;
     }
 
     public void createEndpointHit(EndpointHitFromUserDto endpointHitFromUserDto) {
@@ -58,7 +58,7 @@ public class StatsClient {
 
     private RestTemplate createRestTemplate(String prefix) {
         return new RestTemplateBuilder()
-                .uriTemplateHandler(new DefaultUriBuilderFactory(String.format("%s%s", BASE_URL, prefix)))
+                .uriTemplateHandler(new DefaultUriBuilderFactory(String.format("%s%s", baseUrl, prefix)))
                 .requestFactory(HttpComponentsClientHttpRequestFactory::new)
                 .build();
     }
