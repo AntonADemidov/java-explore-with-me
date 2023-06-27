@@ -2,6 +2,7 @@ package ru.practicum.ewm;
 
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.*;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
@@ -17,7 +18,11 @@ import java.util.Map;
 @Component
 @FieldDefaults(makeFinal = true, level = AccessLevel.PROTECTED)
 public class StatsClient {
-    static final String BASE_URL = "http://localhost:9090";
+    static String BASE_URL;
+
+    public StatsClient(@Value("${stats-server.url}") String baseUrl) {
+        this.BASE_URL = baseUrl;
+    }
 
     public void createEndpointHit(EndpointHitFromUserDto endpointHitFromUserDto) {
         RestTemplate rest = createRestTemplate("/hit");
