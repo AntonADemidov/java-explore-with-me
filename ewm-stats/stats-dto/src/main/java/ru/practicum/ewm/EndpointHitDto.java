@@ -4,16 +4,16 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import lombok.experimental.NonFinal;
 
 import java.time.LocalDateTime;
 
 @Data
 @AllArgsConstructor
-@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
+@NoArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class EndpointHitDto {
-    @NonFinal
     Long id;
     String app;
     String uri;

@@ -2,6 +2,7 @@ package ru.practicum.ewm;
 
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.*;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
@@ -17,22 +18,32 @@ import java.util.Map;
 @Component
 @FieldDefaults(makeFinal = true, level = AccessLevel.PROTECTED)
 public class StatsClient {
-    static final String BASE_URL = "https://localhost:9090";
+    String baseUrl;
 
-    public ResponseEntity<Object> create(EndpointHitDto endpointHitDto) {
+    public StatsClient(@Value("${stats-server.url}") String baseUrl) {
+        this.baseUrl = baseUrl;
+    }
+
+    public void createEndpointHit(EndpointHitFromUserDto endpointHitFromUserDto) {
         RestTemplate rest = createRestTemplate("/hit");
-        return makeAndSendRequest(rest, HttpMethod.POST, "", null, endpointHitDto);
+        makeAndSendRequest(rest, HttpMethod.POST, "", null, endpointHitFromUserDto);
     }
 
     public ResponseEntity<Object> getViewStats(String start, String end, List<String> uris, Boolean unique) {
         RestTemplate rest = createRestTemplate("/stats");
 
-        String paramsUri = "";
+        StringBuilder builder = new StringBuilder();
         if (uris != null && !uris.isEmpty()) {
-            for (String uri : uris) {
-                paramsUri = String.format("%s%s", paramsUri, String.format("&uris=%s", uri));
+            int size = uris.size();
+            for (int i = 0; i < size; i++) {
+                builder.append(uris.get(i));
+
+                if ((i + 1) != size) {
+                    builder.append("&uris=");
+                }
             }
         }
+        String paramsUri = builder.toString();
 
         Map<String, Object> parameters = Map.of(
                 "start", start,
@@ -41,13 +52,13 @@ public class StatsClient {
                 "unique", unique
         );
 
-        String path = String.format("?start={start}&end={end}&uris={%s}&unique={unique}", paramsUri);
+        String path = String.format("?start={start}&end={end}&uris={uris}&unique={unique}", parameters);
         return makeAndSendRequest(rest, HttpMethod.GET, path, parameters, null);
     }
 
     private RestTemplate createRestTemplate(String prefix) {
         return new RestTemplateBuilder()
-                .uriTemplateHandler(new DefaultUriBuilderFactory(String.format("%s%s",BASE_URL, prefix)))
+                .uriTemplateHandler(new DefaultUriBuilderFactory(String.format("%s%s", baseUrl, prefix)))
                 .requestFactory(HttpComponentsClientHttpRequestFactory::new)
                 .build();
     }
