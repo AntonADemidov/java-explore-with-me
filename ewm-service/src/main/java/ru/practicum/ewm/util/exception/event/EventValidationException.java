@@ -1,7 +1,7 @@
 package ru.practicum.ewm.util.exception.event;
 
 public class EventValidationException extends RuntimeException {
-    String reason = "Некорректное действие.";
+    String reason = "Некорректое действие: текущий статус жизненного цикла не позволяет вносить изменения в событие.";
 
     public EventValidationException(String message) {
         super(message);

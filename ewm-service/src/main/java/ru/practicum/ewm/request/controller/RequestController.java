@@ -24,9 +24,12 @@ import java.util.List;
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class RequestController {
+    static final String REQUESTS = "/requests";
+    static final String EVENTS_ID_REQUESTS = "/events/{eventId}/requests";
+    static final String REQUEST_ID_CANCEL = "/{requestId}/cancel";
     RequestService requestService;
 
-    @PostMapping("/requests")
+    @PostMapping(REQUESTS)
     @ResponseStatus(HttpStatus.CREATED)
     public RequestDto createRequest(@PathVariable @Positive Long userId,
                                     @RequestParam(value = "eventId") @Positive Long eventId) {
@@ -34,20 +37,20 @@ public class RequestController {
         return requestService.createRequest(userId, eventId);
     }
 
-    @GetMapping("/requests")
+    @GetMapping(REQUESTS)
     public List<RequestDto> getRequestsOfUser(@PathVariable @Positive Long userId) {
         log.info("Просмотр запросов пользователя: userId={}", userId);
         return requestService.getRequestsOfUser(userId);
     }
 
-    @PatchMapping("/requests/{requestId}/cancel")
+    @PatchMapping(REQUESTS + REQUEST_ID_CANCEL)
     public RequestDto cancelRequest(@PathVariable @Positive Long userId,
                                     @PathVariable @Positive Long requestId) {
         log.info("Отмена запроса пользователя: userId={}, requestId={}", userId, requestId);
         return requestService.cancelRequest(userId, requestId);
     }
 
-    @PatchMapping("/events/{eventId}/requests")
+    @PatchMapping(EVENTS_ID_REQUESTS)
     public RequestStateUpdateResult updateRequestsStatus(@PathVariable @Positive Long userId,
                                                          @PathVariable @Positive Long eventId,
                                                          @RequestBody @Valid RequestStateUpdateRequest request) {
@@ -55,7 +58,7 @@ public class RequestController {
         return requestService.updateRequestsStatusByEventOwner(userId, eventId, request);
     }
 
-    @GetMapping("/events/{eventId}/requests")
+    @GetMapping(EVENTS_ID_REQUESTS)
     public List<RequestDto> getRequestByEventOwner(@PathVariable @Positive Long userId,
                                                    @PathVariable @Positive Long eventId) {
         log.info("Просмотр запросов инициатором события: eventId={}, InitiatorId={}.", eventId, userId);

@@ -24,6 +24,7 @@ import java.util.List;
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class UserController {
+    static final String USER_ID = "/{userId}";
     UserService userService;
 
     @PostMapping
@@ -41,7 +42,7 @@ public class UserController {
         return userService.getUsers(ids, from, size);
     }
 
-    @DeleteMapping("/{userId}")
+    @DeleteMapping(USER_ID)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteUserById(@PathVariable @Positive Long userId) {
         log.info("Удаление пользователя с userId={}.", userId);

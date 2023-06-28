@@ -20,6 +20,7 @@ import java.util.List;
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class CompilationPublicController {
+    static final String COMP_ID = "/{compId}";
     CompilationService compilationService;
 
     @GetMapping
@@ -30,7 +31,7 @@ public class CompilationPublicController {
         return compilationService.getCompilations(pinned, from, size);
     }
 
-    @GetMapping("/{compId}")
+    @GetMapping(COMP_ID)
     public CompilationDto getCompilationById(@PathVariable @Positive Long compId) {
         log.info("Просмотр подборки: compId={}", compId);
         return compilationService.getCompilationById(compId);

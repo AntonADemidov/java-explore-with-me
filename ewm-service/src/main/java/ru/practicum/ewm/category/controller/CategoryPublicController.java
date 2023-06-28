@@ -21,6 +21,7 @@ import java.util.List;
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class CategoryPublicController {
+    static final String CAT_ID = "/{catId}";
     CategoryService categoryService;
 
     @GetMapping
@@ -30,7 +31,7 @@ public class CategoryPublicController {
         return categoryService.getCategories(from, size);
     }
 
-    @GetMapping("/{catId}")
+    @GetMapping(CAT_ID)
     public CategoryDto getCategoryById(@PathVariable @Positive Long catId) {
         log.info("Получение категории: catId={}.", catId);
         return categoryService.getCategoryById(catId);

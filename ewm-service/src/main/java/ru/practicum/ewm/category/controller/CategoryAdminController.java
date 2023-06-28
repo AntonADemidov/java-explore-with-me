@@ -22,6 +22,7 @@ import javax.validation.constraints.Positive;
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class CategoryAdminController {
+    static final String CAT_ID = "/{catId}";
     CategoryService categoryService;
 
     @PostMapping
@@ -31,14 +32,14 @@ public class CategoryAdminController {
         return categoryService.createCategory(newCategoryDto);
     }
 
-    @PatchMapping("/{catId}")
+    @PatchMapping(CAT_ID)
     public CategoryDto updateCategory(@RequestBody @Valid NewCategoryDto newCategoryDto,
                                       @PathVariable @Positive Long catId) {
         log.info("Обновление категории {}, catId={}.", newCategoryDto, catId);
         return categoryService.updateCategory(newCategoryDto, catId);
     }
 
-    @DeleteMapping("/{catId}")
+    @DeleteMapping(CAT_ID)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteCategoryById(@PathVariable @Positive Long catId) {
         log.info("Удаление категории с catId={}.", catId);

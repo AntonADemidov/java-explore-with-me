@@ -23,9 +23,10 @@ import java.util.List;
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class EventAdminController {
+    static final String EVENT_ID = "/{eventId}";
     EventService eventService;
 
-    @PatchMapping("/{eventId}")
+    @PatchMapping(EVENT_ID)
     public EventFullDto updateEventByAdmin(@PathVariable @Positive Long eventId,
                                            @RequestBody @Valid UpdateEventRequest updateEventRequest) {
         log.info("Обновление события администратором: eventId={}.", eventId);

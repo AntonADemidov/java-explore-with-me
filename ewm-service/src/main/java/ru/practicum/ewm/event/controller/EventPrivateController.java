@@ -26,6 +26,7 @@ import java.util.List;
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class EventPrivateController {
+    static final String EVENT_ID = "/{eventId}";
     EventService eventService;
 
     @PostMapping
@@ -44,14 +45,14 @@ public class EventPrivateController {
         return eventService.getEventsByOwner(userId, from, size);
     }
 
-    @GetMapping("/{eventId}")
+    @GetMapping(EVENT_ID)
     public EventFullDto getEventByOwner(@PathVariable @Positive Long userId,
                                         @PathVariable @Positive Long eventId) {
         log.info("Просмотр события пользователя: userId={}, eventId={}", userId, eventId);
         return eventService.getEventByOwner(userId, eventId);
     }
 
-    @PatchMapping("/{eventId}")
+    @PatchMapping(EVENT_ID)
     public EventFullDto updateEventByOwner(@PathVariable @Positive Long userId,
                                            @PathVariable @Positive Long eventId,
                                            @RequestBody @Valid UpdateEventRequest updateEventRequest) {

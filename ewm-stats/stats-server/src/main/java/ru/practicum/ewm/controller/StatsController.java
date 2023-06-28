@@ -22,16 +22,18 @@ import java.util.List;
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class StatsController {
+    static final String HIT = "/hit";
+    static final String STATS = "/stats";
     StatsService statsService;
 
-    @PostMapping("/hit")
+    @PostMapping(HIT)
     @ResponseStatus(HttpStatus.CREATED)
     public EndpointHitDto createEndpointHit(@RequestBody @Valid EndpointHitFromUserDto endpointHitFromUserDto) {
         log.info("Сохранение данных о запросе пользователя {}", endpointHitFromUserDto);
         return statsService.createEndpointHit(endpointHitFromUserDto);
     }
 
-    @GetMapping("/stats")
+    @GetMapping(STATS)
     public List<ViewStatsDto> getViewStats(@RequestParam String start,
                                            @RequestParam String end,
                                            @RequestParam(required = false) List<String> uris,

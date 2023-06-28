@@ -23,6 +23,7 @@ import java.util.List;
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class EventPublicController {
+    static final String ID = "/{id}";
     EventService eventService;
 
     @GetMapping
@@ -43,7 +44,7 @@ public class EventPublicController {
         return eventService.getPublicEvents(text, categories, paid, rangeStart, rangeEnd, onlyAvailable, sort, from, size, request);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping(ID)
     public EventFullDto getPublicEventById(@PathVariable @Positive Long id, HttpServletRequest request) {
         log.info("Получение события: eventId={}.", id);
         log.info("IP-адрес пользователя: ip={}.", request.getRemoteAddr());

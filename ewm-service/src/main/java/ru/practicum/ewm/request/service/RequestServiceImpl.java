@@ -197,7 +197,7 @@ public class RequestServiceImpl implements RequestService {
                     .count();
 
             if (!(confirmedRequests < event.getParticipantLimit())) {
-                throw new RequestValidationException(String.format("Обработать запрос невозможно - достигнут лимит участников: %d",
+                throw new RequestValidationException(String.format("Обработать запрос невозможно - достигнут лимит участников события: %d",
                         event.getParticipantLimit()));
             }
         }

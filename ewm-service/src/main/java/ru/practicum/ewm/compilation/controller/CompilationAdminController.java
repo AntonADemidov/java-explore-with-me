@@ -23,6 +23,7 @@ import javax.validation.constraints.Positive;
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class CompilationAdminController {
+    static final String COMP_ID = "/{compId}";
     CompilationService compilationService;
 
     @PostMapping
@@ -32,14 +33,14 @@ public class CompilationAdminController {
         return compilationService.createCompilation(compilationDto);
     }
 
-    @PatchMapping("/{compId}")
+    @PatchMapping(COMP_ID)
     public CompilationDto updateCompilation(@PathVariable @Positive Long compId,
                                             @RequestBody @Valid UpdateCompilationRequest request) {
         log.info("Обновление подборки событий с compId={}.", compId);
         return compilationService.updateCompilation(compId, request);
     }
 
-    @DeleteMapping("/{compId}")
+    @DeleteMapping(COMP_ID)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteCompilationById(@PathVariable @Positive Long compId) {
         log.info("Удаление подборки событий с compId={}.", compId);
