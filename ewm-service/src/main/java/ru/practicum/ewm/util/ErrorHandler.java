@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import ru.practicum.ewm.ApiError;
 import ru.practicum.ewm.DateValidationException;
 import ru.practicum.ewm.util.exception.category.CategoryNotFoundException;
+import ru.practicum.ewm.util.exception.comment.CommentValidationException;
 import ru.practicum.ewm.util.exception.compilation.CompilationNotFoundException;
 import ru.practicum.ewm.util.exception.event.EventNotFoundException;
 import ru.practicum.ewm.util.exception.event.EventValidationException;
@@ -20,6 +21,7 @@ import ru.practicum.ewm.util.exception.request.RequestNotFoundException;
 import ru.practicum.ewm.util.exception.request.RequestValidationException;
 import ru.practicum.ewm.util.exception.user.UserNotFoundException;
 
+import javax.validation.ConstraintViolationException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -40,6 +42,14 @@ public class ErrorHandler {
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ApiError handleMissingServletRequestParameterException(final MissingServletRequestParameterException exception) {
+        String reason = "Некорректные параметры запроса.";
+        log.error(exception.getMessage());
+        return getApiError(HttpStatus.BAD_REQUEST, reason, exception.getMessage());
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ApiError handleConstraintViolationException(final ConstraintViolationException exception) {
         String reason = "Некорректные параметры запроса.";
         log.error(exception.getMessage());
         return getApiError(HttpStatus.BAD_REQUEST, reason, exception.getMessage());
@@ -68,7 +78,7 @@ public class ErrorHandler {
         return getApiError(HttpStatus.CONFLICT, reason, exception.getMessage());
     }
 
-    @ExceptionHandler({EventValidationException.class, RequestValidationException.class})
+    @ExceptionHandler({EventValidationException.class, RequestValidationException.class, CommentValidationException.class})
     @ResponseStatus(HttpStatus.CONFLICT)
     public ApiError handleValidationException(final RuntimeException exception) {
         log.error(exception.getMessage());

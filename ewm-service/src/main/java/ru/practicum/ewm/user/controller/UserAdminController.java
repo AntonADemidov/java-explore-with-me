@@ -23,7 +23,7 @@ import java.util.List;
 @RequestMapping(path = "/admin/users")
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
-public class UserController {
+public class UserAdminController {
     static final String USER_ID = "/{userId}";
     UserService userService;
 

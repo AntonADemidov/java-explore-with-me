@@ -59,7 +59,7 @@ public class EventServiceImpl implements ru.practicum.ewm.event.service.EventSer
         }
 
         Event event = EventMapper.toEvent(newEventDto);
-        validateEventDate(event, 1);
+        validateEventDate(event, 2);
 
         Location location = LocationMapper.toLocation(newEventDto.getLocation());
         Location actualLocation = locationRepository.save(location);

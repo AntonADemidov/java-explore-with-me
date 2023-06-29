@@ -75,13 +75,6 @@ public class EventMapper {
         return views;
     }
 
-
-    /*public static EventFullDto toEventFullDto(Event event, Integer views) {
-        EventFullDto eventFullDto = toEventFullDto(event);
-        eventFullDto.setViews(views);
-        return eventFullDto;
-    }*/
-
     public static EventShortDto toEventShortDto(Event event) {
         EventShortDto eventShortDto = new EventShortDto();
         eventShortDto.setId(event.getId());

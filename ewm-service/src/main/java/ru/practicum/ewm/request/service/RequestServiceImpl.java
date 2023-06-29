@@ -203,16 +203,6 @@ public class RequestServiceImpl implements RequestService {
         }
     }
 
-    /*private RequestState getRequestStatus(Event event) {
-        RequestState state;
-        if (event.getRequestModeration() || event.getParticipantLimit() == 0) {
-            state = RequestState.PENDING;
-        } else {
-            state = RequestState.CONFIRMED;
-        }
-        return state;
-    }*/
-
     private RequestState getRequestStatus(Event event) {
         RequestState state;
         if (event.getRequestModeration()) {
