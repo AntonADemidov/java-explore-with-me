@@ -29,6 +29,8 @@ CREATE TABLE IF NOT EXISTS events (
     paid BOOLEAN NOT NULL,
     request_moderation BOOLEAN NOT NULL,
     participant_limit BIGINT NOT NULL,
+    comment_moderation BOOLEAN NOT NULL,
+    closed_comments BOOLEAN NOT NULL,
     location_id BIGINT NOT NULL REFERENCES locations (location_id),
     category_id BIGINT NOT NULL REFERENCES categories (category_id),
     initiator_id BIGINT NOT NULL REFERENCES users (user_id)
@@ -59,8 +61,6 @@ CREATE TABLE IF NOT EXISTS comments (
     text VARCHAR(7000) NOT NULL,
     event_id BIGINT NOT NULL REFERENCES events (event_id),
     author_id BIGINT NOT NULL REFERENCES users (user_id),
-    comment_moderation BOOLEAN NOT NULL,
-    closed_comments BOOLEAN NOT NULL,
     comment_status VARCHAR(10) NOT NULL,
     created_on TIMESTAMP WITHOUT TIME ZONE NOT NULL,
     published_on TIMESTAMP WITHOUT TIME ZONE

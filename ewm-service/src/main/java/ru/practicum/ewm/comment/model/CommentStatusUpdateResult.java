@@ -4,11 +4,11 @@ import lombok.AccessLevel;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
 
-import javax.validation.constraints.NotBlank;
+import java.util.List;
 
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class NewCommentDto {
-    @NotBlank
-    String text;
+public class CommentStatusUpdateResult {
+    List<CommentDto> publishedComments;
+    List<CommentDto> rejectedComments;
 }

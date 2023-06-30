@@ -3,7 +3,6 @@ package ru.practicum.ewm.comment.model;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import ru.practicum.ewm.event.model.Event;
-import ru.practicum.ewm.request.model.RequestState;
 import ru.practicum.ewm.user.model.User;
 
 import javax.persistence.*;
@@ -25,19 +24,9 @@ public class Comment {
     @Column(name = "text", nullable = false)
     String text;
 
-    @ManyToOne
-    @JoinColumn(name = "event_id", nullable = false)
-    Event event;
-
     @OneToOne
     @JoinColumn(name = "author_id", nullable = false)
     User author;
-
-    @Column(name = "comment_moderation", nullable = false)
-    Boolean commentModeration;
-
-    @Column(name = "closed_comments", nullable = false)
-    Boolean closedComments;
 
     @Column(name = "comment_status", nullable = false)
     @Enumerated(EnumType.STRING)
@@ -48,4 +37,8 @@ public class Comment {
 
     @Column(name = "published_on")
     LocalDateTime publishedOn;
+
+    @ManyToOne
+    @JoinColumn(name = "event_id", nullable = false)
+    Event event;
 }

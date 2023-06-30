@@ -10,11 +10,9 @@ import ru.practicum.ewm.user.model.UserShortDto;
 public class CommentDto {
     Long id;
     String text;
-    EventShortDto event;
     UserShortDto author;
-    Boolean commentModeration;
-    Boolean closedComments;
     CommentStatus status;
     String createdOn;
     String publishedOn;
+    EventShortDto event;
 }

@@ -75,6 +75,12 @@ public class Event {
     @ManyToMany(mappedBy = "events")
     Set<Compilation> compilations;
 
+    @Column(name = "comment_moderation", nullable = false)
+    Boolean commentModeration;
+
+    @Column(name = "closed_comments", nullable = false)
+    Boolean closedComments;
+
     @OneToMany(mappedBy = "event", fetch = FetchType.LAZY)
     List<Comment> comments;
 }

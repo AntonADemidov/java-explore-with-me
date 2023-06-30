@@ -30,6 +30,8 @@ public class EventMapper {
         event.setEventDate(LocalDateTime.parse(newEventDto.getEventDate(), FORMATTER));
         event.setPaid(newEventDto.getPaid());
         event.setRequestModeration(newEventDto.getRequestModeration());
+        event.setClosedComments(newEventDto.getClosedComments());
+        event.setCommentModeration(newEventDto.getCommentModeration());
         event.setParticipantLimit(newEventDto.getParticipantLimit());
         return event;
     }
@@ -46,6 +48,8 @@ public class EventMapper {
         eventFullDto.setPublishedOn(event.getPublishedOn().format(FORMATTER));
         eventFullDto.setPaid(event.getPaid());
         eventFullDto.setRequestModeration(event.getRequestModeration());
+        eventFullDto.setClosedComments(event.getClosedComments());
+        eventFullDto.setCommentModeration(event.getCommentModeration());
         eventFullDto.setParticipantLimit(event.getParticipantLimit());
         eventFullDto.setLocation(ru.practicum.ewm.event.mapper.LocationMapper.toLocationDto(event.getLocation()));
         eventFullDto.setCategory(CategoryMapper.toCategoryDto(event.getCategory()));
@@ -58,6 +62,19 @@ public class EventMapper {
         EventFullDto eventFullDto = toEventFullDto(event);
         eventFullDto.setViews(getStats(event, uri, statsClient));
         return eventFullDto;
+    }
+
+    public static EventShortDto toEventShortDto(Event event) {
+        EventShortDto eventShortDto = new EventShortDto();
+        eventShortDto.setId(event.getId());
+        eventShortDto.setTitle(event.getTitle());
+        eventShortDto.setAnnotation(event.getAnnotation());
+        eventShortDto.setEventDate(event.getEventDate().format(FORMATTER));
+        eventShortDto.setPaid(event.getPaid());
+        eventShortDto.setCategory(CategoryMapper.toCategoryDto(event.getCategory()));
+        eventShortDto.setInitiator(UserMapper.toUserShortDto(event.getInitiator()));
+        eventShortDto.setConfirmedRequests(getConfirmedRequests(event));
+        return eventShortDto;
     }
 
     private static Integer getStats(Event event, String uri, StatsClient statsClient) {
@@ -73,19 +90,6 @@ public class EventMapper {
         Object hits = linkedHashMap.get("hits");
         Integer views = (Integer) hits;
         return views;
-    }
-
-    public static EventShortDto toEventShortDto(Event event) {
-        EventShortDto eventShortDto = new EventShortDto();
-        eventShortDto.setId(event.getId());
-        eventShortDto.setTitle(event.getTitle());
-        eventShortDto.setAnnotation(event.getAnnotation());
-        eventShortDto.setEventDate(event.getEventDate().format(FORMATTER));
-        eventShortDto.setPaid(event.getPaid());
-        eventShortDto.setCategory(CategoryMapper.toCategoryDto(event.getCategory()));
-        eventShortDto.setInitiator(UserMapper.toUserShortDto(event.getInitiator()));
-        eventShortDto.setConfirmedRequests(getConfirmedRequests(event));
-        return eventShortDto;
     }
 
     private static Long getConfirmedRequests(Event event) {

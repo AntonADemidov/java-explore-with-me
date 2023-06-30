@@ -5,10 +5,14 @@ import lombok.Data;
 import lombok.experimental.FieldDefaults;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import java.util.List;
 
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class NewCommentDto {
+public class CommentStatusUpdateRequest {
+    @NotNull
+    List<Long> commentIds;
     @NotBlank
-    String text;
+    String status;
 }

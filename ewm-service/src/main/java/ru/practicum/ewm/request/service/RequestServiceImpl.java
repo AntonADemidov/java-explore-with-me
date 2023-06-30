@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.ewm.event.model.Event;
 import ru.practicum.ewm.event.model.State;
 import ru.practicum.ewm.event.service.EventService;
+import ru.practicum.ewm.util.exception.comment.CommentValidationException;
 import ru.practicum.ewm.util.exception.request.RequestNotFoundException;
 import ru.practicum.ewm.util.exception.request.RequestValidationException;
 import ru.practicum.ewm.request.mapper.RequestMapper;
@@ -27,7 +28,7 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @Service
-@Transactional
+@Transactional(readOnly = true)
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class RequestServiceImpl implements RequestService {
@@ -36,6 +37,7 @@ public class RequestServiceImpl implements RequestService {
     EventService eventService;
 
     @Override
+    @Transactional
     public RequestDto createRequest(Long userId, Long eventId) {
         User user = userService.getUserById(userId);
         Event event = eventService.getEventById(eventId);
@@ -60,6 +62,7 @@ public class RequestServiceImpl implements RequestService {
     }
 
     @Override
+    @Transactional
     public RequestStateUpdateResult updateRequestsStatusByEventOwner(Long userId, Long eventId, RequestStateUpdateRequest updateRequest) {
         List<Request> actualList = new ArrayList<>();
         List<Request> confirmedRequests = new ArrayList<>();
@@ -109,15 +112,11 @@ public class RequestServiceImpl implements RequestService {
     }
 
     @Override
-    @Transactional(readOnly = true)
     public List<RequestDto> getRequestByEventOwner(Long userId, Long eventId) {
         User user = userService.getUserById(userId);
         Event event = eventService.getEventById(eventId);
 
-        if (!event.getInitiator().getId().equals(user.getId())) {
-            throw new RequestValidationException(String.format("Событие с eventId=%d не относится к пользователю с userId=%d",
-                    eventId, userId));
-        }
+        validateInitiator(user, event);
 
         List<Request> requests = requestRepository.findByEventEquals(event);
         List<RequestDto> requestDtos = requests.stream()
@@ -127,15 +126,8 @@ public class RequestServiceImpl implements RequestService {
         return requestDtos;
     }
 
-    private boolean validate(Event event) {
-        long confirmedRequests = event.getParticipationRequests().stream()
-                .filter(r -> r.getStatus().equals(RequestState.CONFIRMED))
-                .count();
-
-        return confirmedRequests < event.getParticipantLimit();
-    }
-
     @Override
+    @Transactional
     public RequestDto cancelRequest(Long userId, Long requestId) {
         User user = userService.getUserById(userId);
         Request request = getRequestById(requestId);
@@ -151,7 +143,6 @@ public class RequestServiceImpl implements RequestService {
     }
 
     @Override
-    @Transactional(readOnly = true)
     public List<RequestDto> getRequestsOfUser(Long userId) {
         User user = userService.getUserById(userId);
         List<Request> requests = requestRepository.findByRequesterEquals(user);
@@ -166,6 +157,14 @@ public class RequestServiceImpl implements RequestService {
                 new RequestNotFoundException(String.format("Запрос с id=%d отсутствует в базе.", id)));
     }
 
+    private boolean validate(Event event) {
+        long confirmedRequests = event.getParticipationRequests().stream()
+                .filter(r -> r.getStatus().equals(RequestState.CONFIRMED))
+                .count();
+
+        return confirmedRequests < event.getParticipantLimit();
+    }
+
     private void validateRequestInBase(User user, Event event) {
         Optional<Request> optionalRequest = requestRepository.findByRequesterEqualsAndEventEquals(user, event);
 
@@ -173,6 +172,13 @@ public class RequestServiceImpl implements RequestService {
             Request request = optionalRequest.get();
             throw new RequestValidationException(String.format("Запрос уже есть в базе: requestId= %d, userId= %d, eventId= %d",
                     request.getId(), request.getRequester().getId(), request.getEvent().getId()));
+        }
+    }
+
+    private void validateInitiator(User user, Event event) {
+        if (!event.getInitiator().getId().equals(user.getId())) {
+            throw new RequestValidationException(String.format("Событие с eventId=%d не относится к пользователю с userId=%d",
+                    event.getId(), user.getId()));
         }
     }
 

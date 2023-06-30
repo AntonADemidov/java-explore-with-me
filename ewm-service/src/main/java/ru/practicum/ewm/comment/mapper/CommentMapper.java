@@ -20,9 +20,7 @@ public class CommentMapper {
         comment.setText(newCommentDto.getText());
         comment.setAuthor(user);
         comment.setEvent(event);
-        comment.setCommentModeration(newCommentDto.getCommentModeration());
-        comment.setClosedComments(newCommentDto.getClosedComments());
-        comment.setStatus(getCommentStatus(newCommentDto));
+        comment.setStatus(getCommentStatus(event));
         comment.setCreatedOn(LocalDateTime.now());
         setPublishedOn(comment);
         return comment;
@@ -34,15 +32,13 @@ public class CommentMapper {
         commentDto.setText(comment.getText());
         commentDto.setAuthor(UserMapper.toUserShortDto(comment.getAuthor()));
         commentDto.setEvent(EventMapper.toEventShortDto(comment.getEvent()));
-        commentDto.setCommentModeration(comment.getCommentModeration());
-        commentDto.setClosedComments(comment.getClosedComments());
         commentDto.setStatus(comment.getStatus());
         commentDto.setCreatedOn(comment.getCreatedOn().format(FORMATTER));
         return commentDto;
     }
 
-    private static CommentStatus getCommentStatus(NewCommentDto newCommentDto) {
-        if (newCommentDto.getCommentModeration()) {
+    private static CommentStatus getCommentStatus(Event event) {
+        if (event.getCommentModeration()) {
             return CommentStatus.PENDING;
         } else {
             return CommentStatus.PUBLISHED;

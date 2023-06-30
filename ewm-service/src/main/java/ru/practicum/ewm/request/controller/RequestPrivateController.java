@@ -61,7 +61,7 @@ public class RequestPrivateController {
     @GetMapping(EVENTS_ID_REQUESTS)
     public List<RequestDto> getRequestByEventOwner(@PathVariable @Positive Long userId,
                                                    @PathVariable @Positive Long eventId) {
-        log.info("Просмотр запросов инициатором события: eventId={}, InitiatorId={}.", eventId, userId);
+        log.info("Просмотр запросов инициатором события: eventId={}, initiatorId={}.", eventId, userId);
         return requestService.getRequestByEventOwner(userId, eventId);
     }
 }

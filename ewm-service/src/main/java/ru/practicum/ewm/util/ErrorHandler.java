@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import ru.practicum.ewm.ApiError;
 import ru.practicum.ewm.DateValidationException;
 import ru.practicum.ewm.util.exception.category.CategoryNotFoundException;
+import ru.practicum.ewm.util.exception.comment.CommentNotFoundException;
 import ru.practicum.ewm.util.exception.comment.CommentValidationException;
 import ru.practicum.ewm.util.exception.compilation.CompilationNotFoundException;
 import ru.practicum.ewm.util.exception.event.EventNotFoundException;
@@ -63,7 +64,7 @@ public class ErrorHandler {
     }
 
     @ExceptionHandler({UserNotFoundException.class, CategoryNotFoundException.class, EventNotFoundException.class,
-            RequestNotFoundException.class, CompilationNotFoundException.class})
+            RequestNotFoundException.class, CompilationNotFoundException.class, CommentNotFoundException.class})
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ApiError handleNotFoundException(final RuntimeException exception) {
         log.error(exception.getMessage());
