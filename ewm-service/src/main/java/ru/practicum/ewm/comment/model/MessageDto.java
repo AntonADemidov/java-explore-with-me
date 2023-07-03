@@ -4,12 +4,15 @@ import lombok.AccessLevel;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
 
-import java.util.List;
+import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class CommentStatusUpdateResult {
-    List<CommentDto> publishedComments;
-    List<CommentDto> reviewedComments;
-    List<CommentDto> rejectedComments;
+public class MessageDto {
+    Long id;
+    Long commentId;
+    Long senderId;
+    String text;
+    String createdOn;
 }

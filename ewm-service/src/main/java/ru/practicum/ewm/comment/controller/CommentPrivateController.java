@@ -27,7 +27,8 @@ import java.util.List;
 public class CommentPrivateController {
     static final String COMMENTS = "/comments";
     static final String EVENTS_ID_COMMENTS = "/events/{eventId}/comments";
-    static final String ID_DELETE = "/{commentId}/delete";
+    static final String ID = "/{commentId}";
+    static final String DELETE = "/delete";
     CommentService commentService;
 
     @PostMapping(COMMENTS)
@@ -40,12 +41,19 @@ public class CommentPrivateController {
     }
 
     @GetMapping(COMMENTS)
-    public List<CommentDto> getCommentsByAuthor(@PathVariable @Positive Long userId) {
-        log.info("Просмотр комментариев пользователя: userId={}", userId);
-        return commentService.getCommentsByAuthor(userId);
+    public List<CommentDto> getListOfCommentsByAuthor(@PathVariable @Positive Long userId) {
+        log.info("Просмотр списка своих комментариев автором: userId={}", userId);
+        return commentService.getListOfCommentsByAuthor(userId);
     }
 
-    @PatchMapping(COMMENTS + ID_DELETE)
+    @GetMapping(COMMENTS + ID)
+    public CommentDto getCommentByAuthor(@PathVariable @Positive Long userId,
+                                         @PathVariable @Positive Long commentId) {
+        log.info("Просмотр своего комментария автором: userId={}, commentId={}", userId, commentId);
+        return commentService.getCommentByAuthor(userId, commentId);
+    }
+
+    @PatchMapping(COMMENTS + ID + DELETE)
     public CommentDto deleteComment(@PathVariable @Positive Long userId,
                                     @PathVariable @Positive Long commentId) {
         log.info("Удаление комментария пользователем: userId={}, requestId={}", userId, commentId);
@@ -60,10 +68,11 @@ public class CommentPrivateController {
     }
 
     @PatchMapping(EVENTS_ID_COMMENTS)
-    public CommentStatusUpdateResult updateCommentsStatus(@PathVariable @Positive Long userId,
-                                                          @PathVariable @Positive Long eventId,
-                                                          @RequestBody @Valid CommentStatusUpdateRequest request) {
+    public CommentStatusUpdateResult updateCommentsStatusByEventOwner(@PathVariable @Positive Long userId,
+                                                                      @PathVariable @Positive Long eventId,
+                                                                      @RequestBody @Valid CommentStatusUpdateRequest request,
+                                                                      @RequestParam(value = "text", required = false) String text) {
         log.info("Обновление статусов комментариев инициатором события: eventId={}, initiatorId={}.", eventId, userId);
-        return commentService.updateCommentsStatusByEventOwner(userId, eventId, request);
+        return commentService.updateCommentsStatusByEventOwner(userId, eventId, request, text);
     }
 }

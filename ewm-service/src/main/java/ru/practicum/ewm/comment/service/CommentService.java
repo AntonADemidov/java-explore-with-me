@@ -13,7 +13,7 @@ public interface CommentService {
     @Transactional
     CommentDto createComment(Long userId, Long eventId, NewCommentDto newCommentDto);
 
-    List<CommentDto> getCommentsByAuthor(Long userId);
+    List<CommentDto> getListOfCommentsByAuthor(Long userId);
 
     @Transactional
     CommentDto deleteComment(Long userId, Long commentId);
@@ -21,5 +21,8 @@ public interface CommentService {
     List<CommentDto> getCommentsByEventOwner(Long userId, Long eventId);
 
     @Transactional
-    CommentStatusUpdateResult updateCommentsStatusByEventOwner(Long userId, Long eventId, CommentStatusUpdateRequest request);
+    CommentStatusUpdateResult updateCommentsStatusByEventOwner(Long userId, Long eventId,
+                                                               CommentStatusUpdateRequest request, String text);
+
+    CommentDto getCommentByAuthor(Long userId, Long commentId);
 }

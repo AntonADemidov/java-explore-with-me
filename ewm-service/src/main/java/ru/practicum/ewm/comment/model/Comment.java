@@ -7,6 +7,7 @@ import ru.practicum.ewm.user.model.User;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
@@ -21,10 +22,14 @@ public class Comment {
     @Column(name = "comment_id", nullable = false)
     Long id;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "event_id", nullable = false)
+    Event event;
+
     @Column(name = "text", nullable = false)
     String text;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "author_id", nullable = false)
     User author;
 
@@ -38,7 +43,6 @@ public class Comment {
     @Column(name = "published_on")
     LocalDateTime publishedOn;
 
-    @ManyToOne
-    @JoinColumn(name = "event_id", nullable = false)
-    Event event;
+    @OneToMany(mappedBy = "comment", fetch = FetchType.LAZY)
+    List<Message> messages;
 }

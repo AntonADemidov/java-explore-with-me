@@ -5,6 +5,9 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.http.ResponseEntity;
 import ru.practicum.ewm.StatsClient;
 import ru.practicum.ewm.category.mapper.CategoryMapper;
+import ru.practicum.ewm.comment.mapper.CommentMapper;
+import ru.practicum.ewm.comment.model.CommentDto;
+import ru.practicum.ewm.comment.model.CommentStatus;
 import ru.practicum.ewm.event.model.Event;
 import ru.practicum.ewm.event.model.EventFullDto;
 import ru.practicum.ewm.event.model.EventShortDto;
@@ -17,6 +20,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class EventMapper {
@@ -55,6 +59,7 @@ public class EventMapper {
         eventFullDto.setCategory(CategoryMapper.toCategoryDto(event.getCategory()));
         eventFullDto.setInitiator(UserMapper.toUserShortDto(event.getInitiator()));
         eventFullDto.setConfirmedRequests(getConfirmedRequests(event));
+        setPublishedComments(eventFullDto, event);
         return eventFullDto;
     }
 
@@ -74,6 +79,7 @@ public class EventMapper {
         eventShortDto.setCategory(CategoryMapper.toCategoryDto(event.getCategory()));
         eventShortDto.setInitiator(UserMapper.toUserShortDto(event.getInitiator()));
         eventShortDto.setConfirmedRequests(getConfirmedRequests(event));
+        setPublishedComments(eventShortDto, event);
         return eventShortDto;
     }
 
@@ -88,8 +94,7 @@ public class EventMapper {
         ArrayList<LinkedHashMap<String, Object>> arrayList = (ArrayList<LinkedHashMap<String, Object>>) response.getBody();
         LinkedHashMap<String, Object> linkedHashMap = arrayList.get(0);
         Object hits = linkedHashMap.get("hits");
-        Integer views = (Integer) hits;
-        return views;
+        return (Integer) hits;
     }
 
     private static Long getConfirmedRequests(Event event) {
@@ -101,5 +106,24 @@ public class EventMapper {
                     .count();
         }
         return confirmedRequests;
+    }
+
+    private static void setPublishedComments(EventFullDto eventFullDto, Event event) {
+        if (event.getComments() != null) {
+            List<CommentDto> commentDtos = event.getComments().stream()
+                    .filter(comment -> comment.getStatus().equals(CommentStatus.PUBLISHED))
+                    .map(CommentMapper::toCommentDto)
+                    .collect(Collectors.toList());
+            eventFullDto.setPublishedComments(commentDtos);
+        }
+    }
+
+    private static void setPublishedComments(EventShortDto eventShortDto, Event event) {
+        if (event.getComments() != null) {
+            long comments = event.getComments().stream()
+                    .filter(comment -> comment.getStatus().equals(CommentStatus.PUBLISHED))
+                    .count();
+            eventShortDto.setPublishedComments(comments);
+        }
     }
 }

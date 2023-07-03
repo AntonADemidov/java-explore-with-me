@@ -1,9 +1,6 @@
 package ru.practicum.ewm.comment.mapper;
 
-import ru.practicum.ewm.comment.model.Comment;
-import ru.practicum.ewm.comment.model.CommentDto;
-import ru.practicum.ewm.comment.model.CommentStatus;
-import ru.practicum.ewm.comment.model.NewCommentDto;
+import ru.practicum.ewm.comment.model.*;
 import ru.practicum.ewm.event.mapper.EventMapper;
 import ru.practicum.ewm.event.model.Event;
 import ru.practicum.ewm.user.mapper.UserMapper;
@@ -11,6 +8,8 @@ import ru.practicum.ewm.user.model.User;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class CommentMapper {
     static DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
@@ -31,10 +30,21 @@ public class CommentMapper {
         commentDto.setId(comment.getId());
         commentDto.setText(comment.getText());
         commentDto.setAuthor(UserMapper.toUserShortDto(comment.getAuthor()));
-        commentDto.setEvent(EventMapper.toEventShortDto(comment.getEvent()));
+        commentDto.setEventId(comment.getEvent().getId());
         commentDto.setStatus(comment.getStatus());
         commentDto.setCreatedOn(comment.getCreatedOn().format(FORMATTER));
+        setMessages(commentDto, comment);
         return commentDto;
+    }
+
+    private static void setMessages(CommentDto commentDto, Comment comment) {
+        if (comment.getMessages() != null) {
+            List<MessageDto> messageDtos = comment.getMessages().stream()
+                    .map(MessageMapper::toMessageDto)
+                    .collect(Collectors.toList());
+
+            commentDto.setMessages(messageDtos);
+        }
     }
 
     private static CommentStatus getCommentStatus(Event event) {
