@@ -8,10 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.ewm.comment.model.CommentDto;
-import ru.practicum.ewm.comment.model.CommentStatusUpdateRequest;
-import ru.practicum.ewm.comment.model.CommentStatusUpdateResult;
-import ru.practicum.ewm.comment.model.NewCommentDto;
+import ru.practicum.ewm.comment.model.*;
 import ru.practicum.ewm.comment.service.CommentService;
 
 import javax.validation.Valid;
@@ -25,11 +22,12 @@ import java.util.List;
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class CommentPrivateController {
+    CommentService commentService;
     static final String COMMENTS = "/comments";
-    static final String EVENTS_ID_COMMENTS = "/events/{eventId}/comments";
     static final String ID = "/{commentId}";
     static final String DELETE = "/delete";
-    CommentService commentService;
+    static final String EVENTS_ID_COMMENTS = "/events/{eventId}/comments";
+
 
     @PostMapping(COMMENTS)
     @ResponseStatus(HttpStatus.CREATED)
@@ -49,22 +47,32 @@ public class CommentPrivateController {
     @GetMapping(COMMENTS + ID)
     public CommentDto getCommentByAuthor(@PathVariable @Positive Long userId,
                                          @PathVariable @Positive Long commentId) {
-        log.info("Просмотр своего комментария автором: userId={}, commentId={}", userId, commentId);
+        log.info("Просмотр комментария автором события: userId={}, commentId={}", userId, commentId);
         return commentService.getCommentByAuthor(userId, commentId);
     }
+
+    @PatchMapping(COMMENTS + ID)
+    public CommentDto updateComment(@PathVariable @Positive Long userId,
+                                    @PathVariable @Positive Long commentId,
+                                    @RequestBody @Valid UpdateCommentRequest request,
+                                    @RequestParam(value = "text", required = false) String text) {
+        log.info("Обновление комментария автором: authorId={}, commentId={}", userId, commentId);
+        return commentService.updateCommentByAuthor(userId, commentId, request, text);
+    }
+
 
     @PatchMapping(COMMENTS + ID + DELETE)
     public CommentDto deleteComment(@PathVariable @Positive Long userId,
                                     @PathVariable @Positive Long commentId) {
-        log.info("Удаление комментария пользователем: userId={}, requestId={}", userId, commentId);
-        return commentService.deleteComment(userId, commentId);
+        log.info("Удаление комментария автором: authorId={}, commentId={}", userId, commentId);
+        return commentService.deleteCommentByAuthor(userId, commentId);
     }
 
     @GetMapping(EVENTS_ID_COMMENTS)
-    public List<CommentDto> getCommentsByEventOwner(@PathVariable @Positive Long userId,
-                                                    @PathVariable @Positive Long eventId) {
+    public List<CommentDto> getListOfCommentsByEventOwner(@PathVariable @Positive Long userId,
+                                                          @PathVariable @Positive Long eventId) {
         log.info("Просмотр комментариев инициатором события: eventId={}, initiatorId={}.", eventId, userId);
-        return commentService.getCommentsByEventOwner(userId, eventId);
+        return commentService.getListOfCommentsByEventOwner(userId, eventId);
     }
 
     @PatchMapping(EVENTS_ID_COMMENTS)
@@ -74,5 +82,21 @@ public class CommentPrivateController {
                                                                       @RequestParam(value = "text", required = false) String text) {
         log.info("Обновление статусов комментариев инициатором события: eventId={}, initiatorId={}.", eventId, userId);
         return commentService.updateCommentsStatusByEventOwner(userId, eventId, request, text);
+    }
+
+    @GetMapping(EVENTS_ID_COMMENTS + ID)
+    public CommentDto getCommentByEventOwner(@PathVariable @Positive Long userId,
+                                             @PathVariable @Positive Long eventId,
+                                             @PathVariable @Positive Long commentId) {
+        log.info("Просмотр комментария инициатором события: initiatorId={}, eventId={}, commentId={}", userId, eventId, commentId);
+        return commentService.getCommentByEventOwner(userId, eventId, commentId);
+    }
+
+    @PatchMapping(EVENTS_ID_COMMENTS + ID + DELETE)
+    public CommentDto deleteCommentByEventOwner(@PathVariable @Positive Long userId,
+                                                @PathVariable @Positive Long eventId,
+                                                @PathVariable @Positive Long commentId) {
+        log.info("Удаление комментария инициатором события: initiatorId={}, eventId={}, commentId={}", userId, eventId, commentId);
+        return commentService.deleteCommentByEventOwner(userId, eventId, commentId);
     }
 }

@@ -9,13 +9,10 @@ import java.util.List;
 
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class CommentDto {
+public class CommentPublicDto {
     Long id;
-    Long eventId;
-    String text;
-    UserShortDto author;
-    CommentStatus status;
-    String createdOn;
+    Long authorId;
     String publishedOn;
-    List<MessageDto> messages;
+    String text;
+    Integer views;
 }

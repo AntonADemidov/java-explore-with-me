@@ -5,8 +5,6 @@ import lombok.Data;
 import lombok.experimental.FieldDefaults;
 import org.hibernate.validator.constraints.Length;
 
-import javax.persistence.Column;
-
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class UpdateEventRequest {

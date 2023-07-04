@@ -1,5 +1,7 @@
 package ru.practicum.ewm.comment.repository;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import ru.practicum.ewm.comment.model.Comment;
 import ru.practicum.ewm.comment.model.CommentStatus;
@@ -9,9 +11,11 @@ import ru.practicum.ewm.user.model.User;
 import java.util.List;
 
 public interface CommentRepository extends JpaRepository<Comment, Long> {
-    List<Comment> findByAuthorEqualsAndStatusNot(User user, CommentStatus status);
+    List<Comment> findByAuthorEqualsAndStatusNotAndStatusNot(User user, CommentStatus firstStatus, CommentStatus secondStatus);
 
     List<Comment> findByEventEquals(Event event);
 
     List<Comment> findByIdIn(List<Long> commentIds);
+
+    Page<Comment> findAllByEventEquals(Event event, Pageable request);
 }

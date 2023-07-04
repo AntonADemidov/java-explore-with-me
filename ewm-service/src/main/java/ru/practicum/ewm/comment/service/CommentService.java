@@ -1,11 +1,9 @@
 package ru.practicum.ewm.comment.service;
 
 import org.springframework.transaction.annotation.Transactional;
-import ru.practicum.ewm.comment.model.CommentDto;
-import ru.practicum.ewm.comment.model.CommentStatusUpdateRequest;
-import ru.practicum.ewm.comment.model.CommentStatusUpdateResult;
-import ru.practicum.ewm.comment.model.NewCommentDto;
+import ru.practicum.ewm.comment.model.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @Transactional(readOnly = true)
@@ -16,13 +14,24 @@ public interface CommentService {
     List<CommentDto> getListOfCommentsByAuthor(Long userId);
 
     @Transactional
-    CommentDto deleteComment(Long userId, Long commentId);
+    CommentDto deleteCommentByAuthor(Long userId, Long commentId);
 
-    List<CommentDto> getCommentsByEventOwner(Long userId, Long eventId);
+    List<CommentDto> getListOfCommentsByEventOwner(Long userId, Long eventId);
 
     @Transactional
     CommentStatusUpdateResult updateCommentsStatusByEventOwner(Long userId, Long eventId,
                                                                CommentStatusUpdateRequest request, String text);
 
     CommentDto getCommentByAuthor(Long userId, Long commentId);
+
+    CommentDto getCommentByEventOwner(Long userId, Long eventId, Long commentId);
+
+    @Transactional
+    CommentDto deleteCommentByEventOwner(Long userId, Long eventId, Long commentId);
+
+    CommentDto updateCommentByAuthor(Long userId, Long commentId, UpdateCommentRequest request, String text);
+
+    List<CommentPublicDto> getPublicComments(Long eventId, Integer from, Integer size, HttpServletRequest request);
+
+    CommentPublicDto getPublicCommentById(Long eventId, Long commentId, HttpServletRequest request);
 }

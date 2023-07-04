@@ -5,8 +5,14 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.practicum.ewm.EndpointHitFromUserDto;
+import ru.practicum.ewm.StatsClient;
 import ru.practicum.ewm.comment.mapper.CommentMapper;
 import ru.practicum.ewm.comment.model.*;
 import ru.practicum.ewm.comment.repository.CommentRepository;
@@ -19,10 +25,13 @@ import ru.practicum.ewm.request.model.RequestState;
 import ru.practicum.ewm.request.repository.RequestRepository;
 import ru.practicum.ewm.user.model.User;
 import ru.practicum.ewm.user.service.UserService;
+import ru.practicum.ewm.util.PageNumber;
 import ru.practicum.ewm.util.exception.comment.CommentNotFoundException;
 import ru.practicum.ewm.util.exception.comment.CommentValidationException;
 
+import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -39,6 +48,8 @@ public class CommentServiceImpl implements CommentService {
     EventService eventService;
     RequestRepository requestRepository;
     MessageRepository messageRepository;
+    StatsClient statsClient;
+    static DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     @Override
     @Transactional
@@ -59,7 +70,7 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public List<CommentDto> getListOfCommentsByAuthor(Long userId) {
         User user = userService.getUserById(userId);
-        List<Comment> comments = commentRepository.findByAuthorEqualsAndStatusNot(user, CommentStatus.DELETED);
+        List<Comment> comments = commentRepository.findByAuthorEqualsAndStatusNotAndStatusNot(user, CommentStatus.DELETED, CommentStatus.CANCELED);
 
         List<CommentDto> commentDtos = comments.stream()
                 .map(CommentMapper::toCommentDto)
@@ -71,13 +82,116 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     @Transactional
-    public CommentDto deleteComment(Long userId, Long commentId) {
+    public CommentDto deleteCommentByAuthor(Long userId, Long commentId) {
+        return deleteCommentBasicMethod(userId, null, commentId);
+    }
+
+    @Override
+    @Transactional
+    public CommentDto deleteCommentByEventOwner(Long userId, Long eventId, Long commentId) {
+        return deleteCommentBasicMethod(userId, eventId, commentId);
+    }
+
+    @Override
+    public CommentDto updateCommentByAuthor(Long userId, Long commentId, UpdateCommentRequest request, String text) {
         User user = userService.getUserById(userId);
         Comment comment = getCommentById(commentId);
 
         validateCommentAuthor(comment, user);
+        checkCommentStatus(comment, true, true);
 
-        comment.setStatus(CommentStatus.DELETED);
+        comment.setText(request.getText());
+
+        if (comment.getStatus().equals(CommentStatus.REVIEWED)) {
+            if (text != null) {
+                Message message = createMessage(text, comment);
+                Message actualMessage = messageRepository.save(message);
+                log.info("Создано сообщение для инициатора события: messageId={}.", actualMessage.getId());
+            }
+            comment.setStatus(CommentStatus.PENDING);
+        }
+
+        Comment actualComment = commentRepository.save(comment);
+        CommentDto commentDto = CommentMapper.toCommentDto(actualComment);
+
+        log.info("Комментарий обновлён автором: commentId={}, eventId={}, authorId={}.",
+                commentDto.getId(), commentDto.getEventId(), commentDto.getAuthor().getId());
+        return commentDto;
+    }
+
+    @Override
+    public List<CommentPublicDto> getPublicComments(Long eventId, Integer from, Integer size, HttpServletRequest httpServletRequest) {
+        Event event = eventService.getEventById(eventId);
+
+        String timestamp = LocalDateTime.now().format(FORMATTER);
+        String uri = httpServletRequest.getRequestURI();
+        String ip = httpServletRequest.getRemoteAddr();
+
+        Pageable request = PageRequest.of(PageNumber.get(from, size), size);
+        Page<Comment> requestPage = commentRepository.findAllByEventEquals(event, request);
+
+        List<CommentPublicDto> commentPublicDtos = requestPage.stream()
+                .map(CommentMapper::toCommentPublicDto)
+                .collect(Collectors.toList());
+
+        saveStats(uri, ip, timestamp);
+        log.info("Список комментариев сформирован: количество элементов={}.", commentPublicDtos.size());
+        return commentPublicDtos;
+    }
+
+    private void saveStats(String uri, String ip, String timestamp) {
+        EndpointHitFromUserDto endpointHitFromUserDto = getEndpointHitFromUserDto(uri, ip, timestamp);
+        statsClient.createEndpointHit(endpointHitFromUserDto);
+        log.info("Статистика обращения к эндпоинту {} сохранена.", endpointHitFromUserDto.getUri());
+    }
+
+    private EndpointHitFromUserDto getEndpointHitFromUserDto(String uri, String ip, String timestamp) {
+        EndpointHitFromUserDto endpointHitFromUserDto = new EndpointHitFromUserDto();
+        String app = "ewm-service";
+        endpointHitFromUserDto.setApp(app);
+        endpointHitFromUserDto.setUri(uri);
+        endpointHitFromUserDto.setIp(ip);
+        endpointHitFromUserDto.setTimestamp(timestamp);
+        return endpointHitFromUserDto;
+    }
+
+    @Override
+    public CommentPublicDto getPublicCommentById(Long eventId, Long commentId, HttpServletRequest httpServletRequest) {
+        Event event = eventService.getEventById(eventId);
+        Comment comment = getCommentById(commentId);
+
+        String timestamp = LocalDateTime.now().format(FORMATTER);
+        String uri = httpServletRequest.getRequestURI();
+        String ip = httpServletRequest.getRemoteAddr();
+
+        if (!comment.getStatus().equals(CommentStatus.PUBLISHED)) {
+            throw new CommentValidationException(String.format("Комментарий с commentId=%d не опубликован.", comment.getId()));
+        }
+
+        saveStats(uri, ip, timestamp);
+        CommentPublicDto commentPublicDto = CommentMapper.toCommentPublicDto(event, comment, uri, statsClient);
+        log.info("Просмотр комментария по commentId={}.", commentPublicDto.getId());
+        return commentPublicDto;
+    }
+
+    private void validateCommentAuthor(Comment comment, User user) {
+        if (!comment.getAuthor().equals(user)) {
+            throw new CommentValidationException(String.format("Комментарий не относится к данному пользователю: commentId=%d, authorId=%d, userId=%d",
+                    comment.getId(), comment.getAuthor().getId(), user.getId()));
+        }
+    }
+
+    private CommentDto deleteCommentBasicMethod(Long userId, @Nullable Long eventId, Long commentId) {
+        User user = userService.getUserById(userId);
+
+        if (eventId != null) {
+            Event event = eventService.getEventById(eventId);
+            validateEventInitiator(user, event);
+        }
+
+        Comment comment = getCommentById(commentId);
+        validateCommentAuthorOrEventInitiator(comment, user);
+        setNewCommentStatus(comment);
 
         Comment actualComment = commentRepository.save(comment);
         CommentDto commentDto = CommentMapper.toCommentDto(actualComment);
@@ -87,12 +201,22 @@ public class CommentServiceImpl implements CommentService {
         return commentDto;
     }
 
+    private void setNewCommentStatus(Comment comment) {
+        if (comment.getStatus().equals(CommentStatus.PENDING) || comment.getStatus().equals(CommentStatus.REVIEWED)) {
+            comment.setStatus(CommentStatus.CANCELED);
+        } else if (comment.getStatus().equals(CommentStatus.PUBLISHED)) {
+            comment.setStatus(CommentStatus.DELETED);
+        } else {
+            throw new CommentValidationException(String.format("Комментарий уже был удалён: commentId=%d", comment.getId()));
+        }
+    }
+
     @Override
-    public List<CommentDto> getCommentsByEventOwner(Long userId, Long eventId) {
+    public List<CommentDto> getListOfCommentsByEventOwner(Long userId, Long eventId) {
         User user = userService.getUserById(userId);
         Event event = eventService.getEventById(eventId);
 
-        validateInitiator(user, event);
+        validateEventInitiator(user, event);
 
         List<CommentDto> commentDtos = commentRepository.findByEventEquals(event).stream()
                 .map(CommentMapper::toCommentDto)
@@ -102,7 +226,7 @@ public class CommentServiceImpl implements CommentService {
         return commentDtos;
     }
 
-    private void validateInitiator(User user, Event event) {
+    private void validateEventInitiator(User user, Event event) {
         if (!event.getInitiator().getId().equals(user.getId())) {
             throw new CommentValidationException(String.format("Событие с eventId=%d не относится к пользователю с userId=%d.",
                     event.getId(), user.getId()));
@@ -120,7 +244,7 @@ public class CommentServiceImpl implements CommentService {
         User user = userService.getUserById(userId);
         Event event = eventService.getEventById(eventId);
 
-        validateInitiator(user, event);
+        validateEventInitiator(user, event);
         validateClosedComments(user, event, false);
 
         List<Comment> basicList = commentRepository.findByIdIn(request.getCommentIds());
@@ -141,21 +265,45 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public CommentDto getCommentByAuthor(Long userId, Long commentId) {
-        User user = userService.getUserById(userId);
-        Comment comment = getCommentById(commentId);
+        return getCommentBasicMethod(userId, null, commentId, true);
+    }
 
-        checkDeletedStatus(comment);
-        validateCommentAuthor(comment, user);
+    @Override
+    public CommentDto getCommentByEventOwner(Long userId, Long eventId, Long commentId) {
+        return getCommentBasicMethod(userId, eventId, commentId, false);
+    }
+
+    private CommentDto getCommentBasicMethod(Long userId, @Nullable Long eventId, Long commentId, Boolean isAuthor) {
+        User user = userService.getUserById(userId);
+
+        if (eventId != null) {
+            Event event = eventService.getEventById(eventId);
+            validateEventInitiator(user, event);
+        }
+
+        Comment comment = getCommentById(commentId);
+        checkCommentStatus(comment, isAuthor, false);
+        validateCommentAuthorOrEventInitiator(comment, user);
 
         CommentDto commentDto = CommentMapper.toCommentDto(comment);
-        log.info("Комментарий автора найден: authorId={}, commentId={}", commentDto.getId(), user.getId());
+        log.info("Комментарий найден: authorId={}, commentId={}", commentDto.getId(), user.getId());
         return commentDto;
     }
 
-    private void checkDeletedStatus(Comment comment) {
-        if (comment.getStatus().equals(CommentStatus.DELETED)) {
-            throw new CommentNotFoundException(String.format("Комментарий с commentId=%d был удалён из базы автором.",
-                    comment.getId()));
+
+    private void checkCommentStatus(Comment comment, Boolean isAuthor, Boolean isUpdate) {
+        if (isAuthor) {
+            if (comment.getStatus().equals(CommentStatus.DELETED) || comment.getStatus().equals(CommentStatus.CANCELED)) {
+                throw new CommentNotFoundException(String.format("Комментарий с commentId=%d был удалён из базы.",
+                        comment.getId()));
+            }
+        }
+
+        if (isUpdate) {
+            if (comment.getStatus().equals(CommentStatus.PUBLISHED)) {
+                throw new CommentValidationException(String.format("Обновление невозможно - статус комментария %s не соответствует требуемому: PENDING или REVIEWED.",
+                        comment.getStatus()));
+            }
         }
     }
 
@@ -176,17 +324,19 @@ public class CommentServiceImpl implements CommentService {
     }
 
     private void updateResultLists(List<Comment> actualList, List<Comment> publishedComments,
-                                                 List<Comment> reviewedComments, List<Comment> rejectedComments,
-                                                 UpdateCommentStatus status, String text) {
+                                   List<Comment> reviewedComments, List<Comment> rejectedComments,
+                                   UpdateCommentStatus status, String text) {
         for (Comment comment : actualList) {
             if (status.equals(UpdateCommentStatus.CONFIRMED)) {
                 comment.setStatus(CommentStatus.PUBLISHED);
+                comment.setPublishedOn(LocalDateTime.now());
                 publishedComments.add(commentRepository.save(comment));
 
             } else if (status.equals(UpdateCommentStatus.RETURNED_TO_CORRECTION)) {
                 if (text != null) {
                     Message message = createMessage(text, comment);
                     Message actualMessage = messageRepository.save(message);
+                    log.info("Создано сообщение для автора комментария: messageId={}.", actualMessage.getId());
                 }
 
                 comment.setStatus(CommentStatus.REVIEWED);
@@ -220,10 +370,11 @@ public class CommentServiceImpl implements CommentService {
         }
     }
 
-    private void validateCommentAuthor(Comment comment, User user) {
-        if (!comment.getAuthor().equals(user)) {
-            throw new CommentValidationException(String.format("Невозможно совершать действия с чужим комментарием: userId= %d, authorId= %d.",
-                    user.getId(), comment.getAuthor().getId()));
+    private void validateCommentAuthorOrEventInitiator(Comment comment, User user) {
+        if (!comment.getAuthor().equals(user) || !comment.getEvent().getInitiator().equals(user)) {
+            throw new CommentValidationException(String.format("Действие с комментарием могут совершать его автор или" +
+                            "инициатор события: authorId= %d / initiatorId=%d. Действие запрошено пользователем с userId=%d",
+                    comment.getAuthor().getId(), comment.getEvent().getInitiator().getId(), user.getId()));
         }
     }
 
