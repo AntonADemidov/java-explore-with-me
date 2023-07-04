@@ -1,8 +1,8 @@
 {
 	"info": {
 		"_postman_id": "0ad47f27-6ba8-4229-b67e-32f379d6e119",
-		"name": "Comment",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"name": "feature",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
 		"_exporter_id": "25495038"
 	},
 	"item": [
@@ -68,16 +68,7 @@
 						}
 					}
 				},
-				"url": {
-					"raw": "{{baseUrl}}/admin/users",
-					"host": [
-						"{{baseUrl}}"
-					],
-					"path": [
-						"admin",
-						"users"
-					]
-				}
+				"url": "{{baseUrl}}/admin/users"
 			},
 			"response": []
 		},
@@ -141,16 +132,7 @@
 						}
 					}
 				},
-				"url": {
-					"raw": "{{baseUrl}}/admin/categories",
-					"host": [
-						"{{baseUrl}}"
-					],
-					"path": [
-						"admin",
-						"categories"
-					]
-				},
+				"url": "{{baseUrl}}/admin/categories",
 				"description": "Обратите внимание: имя категории должно быть уникальным"
 			},
 			"response": []
@@ -385,16 +367,7 @@
 						}
 					}
 				},
-				"url": {
-					"raw": "{{baseUrl}}/admin/users",
-					"host": [
-						"{{baseUrl}}"
-					],
-					"path": [
-						"admin",
-						"users"
-					]
-				}
+				"url": "{{baseUrl}}/admin/users"
 			},
 			"response": []
 		},
@@ -1676,16 +1649,7 @@
 						}
 					}
 				},
-				"url": {
-					"raw": "{{baseUrl}}/admin/users",
-					"host": [
-						"{{baseUrl}}"
-					],
-					"path": [
-						"admin",
-						"users"
-					]
-				}
+				"url": "{{baseUrl}}/admin/users"
 			},
 			"response": []
 		},
