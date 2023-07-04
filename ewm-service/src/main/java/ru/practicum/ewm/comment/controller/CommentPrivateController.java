@@ -28,7 +28,6 @@ public class CommentPrivateController {
     static final String DELETE = "/delete";
     static final String EVENTS_ID_COMMENTS = "/events/{eventId}/comments";
 
-
     @PostMapping(COMMENTS)
     @ResponseStatus(HttpStatus.CREATED)
     public CommentDto createComment(@PathVariable @Positive Long userId,

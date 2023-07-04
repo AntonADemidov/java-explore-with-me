@@ -3,7 +3,6 @@ package ru.practicum.ewm.comment.service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.ewm.comment.model.*;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @Transactional(readOnly = true)
@@ -29,9 +28,10 @@ public interface CommentService {
     @Transactional
     CommentDto deleteCommentByEventOwner(Long userId, Long eventId, Long commentId);
 
+    @Transactional
     CommentDto updateCommentByAuthor(Long userId, Long commentId, UpdateCommentRequest request, String text);
 
-    List<CommentPublicDto> getPublicComments(Long eventId, Integer from, Integer size, HttpServletRequest request);
+    List<CommentPublicDto> getPublicComments(Long eventId, Integer from, Integer size);
 
-    CommentPublicDto getPublicCommentById(Long eventId, Long commentId, HttpServletRequest request);
+    CommentPublicDto getPublicCommentById(Long eventId, Long commentId);
 }

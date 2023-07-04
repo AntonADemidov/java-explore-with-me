@@ -1,17 +1,12 @@
 package ru.practicum.ewm.comment.mapper;
 
-import org.springframework.http.ResponseEntity;
-import ru.practicum.ewm.StatsClient;
 import ru.practicum.ewm.comment.model.*;
-import ru.practicum.ewm.event.mapper.EventMapper;
 import ru.practicum.ewm.event.model.Event;
 import ru.practicum.ewm.user.mapper.UserMapper;
 import ru.practicum.ewm.user.model.User;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -37,6 +32,7 @@ public class CommentMapper {
         commentDto.setEventId(comment.getEvent().getId());
         commentDto.setStatus(comment.getStatus());
         commentDto.setCreatedOn(comment.getCreatedOn().format(FORMATTER));
+        setPublishedOn(comment);
         setMessages(commentDto, comment);
         return commentDto;
     }
@@ -68,29 +64,9 @@ public class CommentMapper {
     public static CommentPublicDto toCommentPublicDto(Comment comment) {
         CommentPublicDto commentPublicDto = new CommentPublicDto();
         commentPublicDto.setId(comment.getId());
-        commentPublicDto.setAuthorId(comment.getId());
+        commentPublicDto.setAuthorId(comment.getAuthor().getId());
         commentPublicDto.setPublishedOn(comment.getPublishedOn().format(FORMATTER));
         commentPublicDto.setText(comment.getText());
         return commentPublicDto;
-    }
-
-    public static CommentPublicDto toCommentPublicDto(Event event, Comment comment, String uri, StatsClient statsClient) {
-        CommentPublicDto commentPublicDto = toCommentPublicDto(comment);
-        commentPublicDto.setViews(getStats(event, uri, statsClient));
-        return commentPublicDto;
-    }
-
-    private static Integer getStats(Event event, String uri, StatsClient statsClient) {
-        ResponseEntity<Object> response = statsClient.getViewStats(
-                event.getCreatedOn().format(FORMATTER),
-                event.getEventDate().plusYears(100).format(FORMATTER),
-                List.of(uri),
-                true
-        );
-
-        ArrayList<LinkedHashMap<String, Object>> arrayList = (ArrayList<LinkedHashMap<String, Object>>) response.getBody();
-        LinkedHashMap<String, Object> linkedHashMap = arrayList.get(0);
-        Object hits = linkedHashMap.get("hits");
-        return (Integer) hits;
     }
 }

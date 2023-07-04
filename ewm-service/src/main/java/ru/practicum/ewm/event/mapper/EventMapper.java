@@ -6,7 +6,7 @@ import org.springframework.http.ResponseEntity;
 import ru.practicum.ewm.StatsClient;
 import ru.practicum.ewm.category.mapper.CategoryMapper;
 import ru.practicum.ewm.comment.mapper.CommentMapper;
-import ru.practicum.ewm.comment.model.CommentDto;
+import ru.practicum.ewm.comment.model.CommentPublicDto;
 import ru.practicum.ewm.comment.model.CommentStatus;
 import ru.practicum.ewm.event.model.Event;
 import ru.practicum.ewm.event.model.EventFullDto;
@@ -110,11 +110,11 @@ public class EventMapper {
 
     private static void setPublishedComments(EventFullDto eventFullDto, Event event) {
         if (event.getComments() != null) {
-            List<CommentDto> commentDtos = event.getComments().stream()
+            List<CommentPublicDto> commentPublicDtos = event.getComments().stream()
                     .filter(comment -> comment.getStatus().equals(CommentStatus.PUBLISHED))
-                    .map(CommentMapper::toCommentDto)
+                    .map(CommentMapper::toCommentPublicDto)
                     .collect(Collectors.toList());
-            eventFullDto.setPublishedComments(commentDtos);
+            eventFullDto.setPublishedComments(commentPublicDtos);
         }
     }
 

@@ -10,14 +10,13 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.ewm.event.model.Event;
 import ru.practicum.ewm.event.model.State;
 import ru.practicum.ewm.event.service.EventService;
-import ru.practicum.ewm.util.exception.comment.CommentValidationException;
-import ru.practicum.ewm.util.exception.request.RequestNotFoundException;
-import ru.practicum.ewm.util.exception.request.RequestValidationException;
 import ru.practicum.ewm.request.mapper.RequestMapper;
 import ru.practicum.ewm.request.model.*;
 import ru.practicum.ewm.request.repository.RequestRepository;
 import ru.practicum.ewm.user.model.User;
 import ru.practicum.ewm.user.service.UserService;
+import ru.practicum.ewm.util.exception.request.RequestNotFoundException;
+import ru.practicum.ewm.util.exception.request.RequestValidationException;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;

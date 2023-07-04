@@ -4,10 +4,9 @@ import lombok.AccessLevel;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
 import ru.practicum.ewm.category.model.CategoryDto;
-import ru.practicum.ewm.comment.model.CommentDto;
+import ru.practicum.ewm.comment.model.CommentPublicDto;
 import ru.practicum.ewm.user.model.UserShortDto;
 
-import javax.persistence.Column;
 import java.util.List;
 
 @Data
@@ -31,5 +30,5 @@ public class EventFullDto {
     UserShortDto initiator;
     Long confirmedRequests;
     Integer views;
-    List<CommentDto> publishedComments;
+    List<CommentPublicDto> publishedComments;
 }

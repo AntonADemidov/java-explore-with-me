@@ -11,8 +11,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.practicum.ewm.EndpointHitFromUserDto;
-import ru.practicum.ewm.StatsClient;
 import ru.practicum.ewm.comment.mapper.CommentMapper;
 import ru.practicum.ewm.comment.model.*;
 import ru.practicum.ewm.comment.repository.CommentRepository;
@@ -29,9 +27,7 @@ import ru.practicum.ewm.util.PageNumber;
 import ru.practicum.ewm.util.exception.comment.CommentNotFoundException;
 import ru.practicum.ewm.util.exception.comment.CommentValidationException;
 
-import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -48,8 +44,6 @@ public class CommentServiceImpl implements CommentService {
     EventService eventService;
     RequestRepository requestRepository;
     MessageRepository messageRepository;
-    StatsClient statsClient;
-    static DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     @Override
     @Transactional
@@ -68,6 +62,30 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
+    public CommentDto getCommentByAuthor(Long userId, Long commentId) {
+        return getCommentBasicMethod(userId, null, commentId, true);
+    }
+
+    @Override
+    public CommentDto getCommentByEventOwner(Long userId, Long eventId, Long commentId) {
+        return getCommentBasicMethod(userId, eventId, commentId, false);
+    }
+
+    @Override
+    public CommentPublicDto getPublicCommentById(Long eventId, Long commentId) {
+        eventService.getEventById(eventId);
+        Comment comment = getCommentById(commentId);
+
+        if (!comment.getStatus().equals(CommentStatus.PUBLISHED)) {
+            throw new CommentValidationException(String.format("Комментарий с commentId=%d не опубликован.", comment.getId()));
+        }
+
+        CommentPublicDto commentPublicDto = CommentMapper.toCommentPublicDto(comment);
+        log.info("Просмотр комментария: commentId={}.", commentPublicDto.getId());
+        return commentPublicDto;
+    }
+
+    @Override
     public List<CommentDto> getListOfCommentsByAuthor(Long userId) {
         User user = userService.getUserById(userId);
         List<Comment> comments = commentRepository.findByAuthorEqualsAndStatusNotAndStatusNot(user, CommentStatus.DELETED, CommentStatus.CANCELED);
@@ -81,18 +99,37 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    @Transactional
-    public CommentDto deleteCommentByAuthor(Long userId, Long commentId) {
-        return deleteCommentBasicMethod(userId, null, commentId);
+    public List<CommentDto> getListOfCommentsByEventOwner(Long userId, Long eventId) {
+        User user = userService.getUserById(userId);
+        Event event = eventService.getEventById(eventId);
+
+        validateEventInitiator(user, event);
+
+        List<CommentDto> commentDtos = commentRepository.findByEventEquals(event).stream()
+                .map(CommentMapper::toCommentDto)
+                .collect(Collectors.toList());
+
+        log.info("Список комментариев сформирован: количество элементов={}.", commentDtos.size());
+        return commentDtos;
+    }
+
+    @Override
+    public List<CommentPublicDto> getPublicComments(Long eventId, Integer from, Integer size) {
+        Event event = eventService.getEventById(eventId);
+
+        Pageable request = PageRequest.of(PageNumber.get(from, size), size);
+        Page<Comment> requestPage = commentRepository.findAllByEventEqualsAndStatusEquals(event, CommentStatus.PUBLISHED, request);
+
+        List<CommentPublicDto> commentPublicDtos = requestPage.stream()
+                .map(CommentMapper::toCommentPublicDto)
+                .collect(Collectors.toList());
+
+        log.info("Список комментариев сформирован: количество элементов={}.", commentPublicDtos.size());
+        return commentPublicDtos;
     }
 
     @Override
     @Transactional
-    public CommentDto deleteCommentByEventOwner(Long userId, Long eventId, Long commentId) {
-        return deleteCommentBasicMethod(userId, eventId, commentId);
-    }
-
-    @Override
     public CommentDto updateCommentByAuthor(Long userId, Long commentId, UpdateCommentRequest request, String text) {
         User user = userService.getUserById(userId);
         Comment comment = getCommentById(commentId);
@@ -117,120 +154,6 @@ public class CommentServiceImpl implements CommentService {
         log.info("Комментарий обновлён автором: commentId={}, eventId={}, authorId={}.",
                 commentDto.getId(), commentDto.getEventId(), commentDto.getAuthor().getId());
         return commentDto;
-    }
-
-    @Override
-    public List<CommentPublicDto> getPublicComments(Long eventId, Integer from, Integer size, HttpServletRequest httpServletRequest) {
-        Event event = eventService.getEventById(eventId);
-
-        String timestamp = LocalDateTime.now().format(FORMATTER);
-        String uri = httpServletRequest.getRequestURI();
-        String ip = httpServletRequest.getRemoteAddr();
-
-        Pageable request = PageRequest.of(PageNumber.get(from, size), size);
-        Page<Comment> requestPage = commentRepository.findAllByEventEquals(event, request);
-
-        List<CommentPublicDto> commentPublicDtos = requestPage.stream()
-                .map(CommentMapper::toCommentPublicDto)
-                .collect(Collectors.toList());
-
-        saveStats(uri, ip, timestamp);
-        log.info("Список комментариев сформирован: количество элементов={}.", commentPublicDtos.size());
-        return commentPublicDtos;
-    }
-
-    private void saveStats(String uri, String ip, String timestamp) {
-        EndpointHitFromUserDto endpointHitFromUserDto = getEndpointHitFromUserDto(uri, ip, timestamp);
-        statsClient.createEndpointHit(endpointHitFromUserDto);
-        log.info("Статистика обращения к эндпоинту {} сохранена.", endpointHitFromUserDto.getUri());
-    }
-
-    private EndpointHitFromUserDto getEndpointHitFromUserDto(String uri, String ip, String timestamp) {
-        EndpointHitFromUserDto endpointHitFromUserDto = new EndpointHitFromUserDto();
-        String app = "ewm-service";
-        endpointHitFromUserDto.setApp(app);
-        endpointHitFromUserDto.setUri(uri);
-        endpointHitFromUserDto.setIp(ip);
-        endpointHitFromUserDto.setTimestamp(timestamp);
-        return endpointHitFromUserDto;
-    }
-
-    @Override
-    public CommentPublicDto getPublicCommentById(Long eventId, Long commentId, HttpServletRequest httpServletRequest) {
-        Event event = eventService.getEventById(eventId);
-        Comment comment = getCommentById(commentId);
-
-        String timestamp = LocalDateTime.now().format(FORMATTER);
-        String uri = httpServletRequest.getRequestURI();
-        String ip = httpServletRequest.getRemoteAddr();
-
-        if (!comment.getStatus().equals(CommentStatus.PUBLISHED)) {
-            throw new CommentValidationException(String.format("Комментарий с commentId=%d не опубликован.", comment.getId()));
-        }
-
-        saveStats(uri, ip, timestamp);
-        CommentPublicDto commentPublicDto = CommentMapper.toCommentPublicDto(event, comment, uri, statsClient);
-        log.info("Просмотр комментария по commentId={}.", commentPublicDto.getId());
-        return commentPublicDto;
-    }
-
-    private void validateCommentAuthor(Comment comment, User user) {
-        if (!comment.getAuthor().equals(user)) {
-            throw new CommentValidationException(String.format("Комментарий не относится к данному пользователю: commentId=%d, authorId=%d, userId=%d",
-                    comment.getId(), comment.getAuthor().getId(), user.getId()));
-        }
-    }
-
-    private CommentDto deleteCommentBasicMethod(Long userId, @Nullable Long eventId, Long commentId) {
-        User user = userService.getUserById(userId);
-
-        if (eventId != null) {
-            Event event = eventService.getEventById(eventId);
-            validateEventInitiator(user, event);
-        }
-
-        Comment comment = getCommentById(commentId);
-        validateCommentAuthorOrEventInitiator(comment, user);
-        setNewCommentStatus(comment);
-
-        Comment actualComment = commentRepository.save(comment);
-        CommentDto commentDto = CommentMapper.toCommentDto(actualComment);
-
-        log.info("Комментарий удалён: commentId={}, eventId={}, authorId={}.",
-                commentDto.getId(), commentDto.getEventId(), commentDto.getAuthor().getId());
-        return commentDto;
-    }
-
-    private void setNewCommentStatus(Comment comment) {
-        if (comment.getStatus().equals(CommentStatus.PENDING) || comment.getStatus().equals(CommentStatus.REVIEWED)) {
-            comment.setStatus(CommentStatus.CANCELED);
-        } else if (comment.getStatus().equals(CommentStatus.PUBLISHED)) {
-            comment.setStatus(CommentStatus.DELETED);
-        } else {
-            throw new CommentValidationException(String.format("Комментарий уже был удалён: commentId=%d", comment.getId()));
-        }
-    }
-
-    @Override
-    public List<CommentDto> getListOfCommentsByEventOwner(Long userId, Long eventId) {
-        User user = userService.getUserById(userId);
-        Event event = eventService.getEventById(eventId);
-
-        validateEventInitiator(user, event);
-
-        List<CommentDto> commentDtos = commentRepository.findByEventEquals(event).stream()
-                .map(CommentMapper::toCommentDto)
-                .collect(Collectors.toList());
-
-        log.info("Список комментариев сформирован: количество элементов={}.", commentDtos.size());
-        return commentDtos;
-    }
-
-    private void validateEventInitiator(User user, Event event) {
-        if (!event.getInitiator().getId().equals(user.getId())) {
-            throw new CommentValidationException(String.format("Событие с eventId=%d не относится к пользователю с userId=%d.",
-                    event.getId(), user.getId()));
-        }
     }
 
     @Override
@@ -264,13 +187,15 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public CommentDto getCommentByAuthor(Long userId, Long commentId) {
-        return getCommentBasicMethod(userId, null, commentId, true);
+    @Transactional
+    public CommentDto deleteCommentByAuthor(Long userId, Long commentId) {
+        return deleteCommentBasicMethod(userId, null, commentId);
     }
 
     @Override
-    public CommentDto getCommentByEventOwner(Long userId, Long eventId, Long commentId) {
-        return getCommentBasicMethod(userId, eventId, commentId, false);
+    @Transactional
+    public CommentDto deleteCommentByEventOwner(Long userId, Long eventId, Long commentId) {
+        return deleteCommentBasicMethod(userId, eventId, commentId);
     }
 
     private CommentDto getCommentBasicMethod(Long userId, @Nullable Long eventId, Long commentId, Boolean isAuthor) {
@@ -290,6 +215,54 @@ public class CommentServiceImpl implements CommentService {
         return commentDto;
     }
 
+    private Comment getCommentById(Long id) {
+        return commentRepository.findById(id).orElseThrow(() ->
+                new CommentNotFoundException(String.format("Комментарий с commentId=%d отсутствует в базе.", id)));
+    }
+
+    private CommentDto deleteCommentBasicMethod(Long userId, @Nullable Long eventId, Long commentId) {
+        User user = userService.getUserById(userId);
+
+        if (eventId != null) {
+            Event event = eventService.getEventById(eventId);
+            validateEventInitiator(user, event);
+        }
+
+        Comment comment = getCommentById(commentId);
+        validateCommentAuthorOrEventInitiator(comment, user);
+        setNewCommentStatus(comment);
+
+        Comment actualComment = commentRepository.save(comment);
+        CommentDto commentDto = CommentMapper.toCommentDto(actualComment);
+
+        log.info("Комментарий удалён: commentId={}, eventId={}, authorId={}.",
+                commentDto.getId(), commentDto.getEventId(), commentDto.getAuthor().getId());
+        return commentDto;
+    }
+
+    private void validateCommentAuthor(Comment comment, User user) {
+        if (!comment.getAuthor().equals(user)) {
+            throw new CommentValidationException(String.format("Комментарий не относится к данному пользователю: commentId=%d, authorId=%d, userId=%d",
+                    comment.getId(), comment.getAuthor().getId(), user.getId()));
+        }
+    }
+
+    private void setNewCommentStatus(Comment comment) {
+        if (comment.getStatus().equals(CommentStatus.PENDING) || comment.getStatus().equals(CommentStatus.REVIEWED)) {
+            comment.setStatus(CommentStatus.CANCELED);
+        } else if (comment.getStatus().equals(CommentStatus.PUBLISHED)) {
+            comment.setStatus(CommentStatus.DELETED);
+        } else {
+            throw new CommentValidationException(String.format("Комментарий уже был удалён: commentId=%d", comment.getId()));
+        }
+    }
+
+    private void validateEventInitiator(User user, Event event) {
+        if (!event.getInitiator().getId().equals(user.getId())) {
+            throw new CommentValidationException(String.format("Событие с eventId=%d не относится к пользователю с userId=%d.",
+                    event.getId(), user.getId()));
+        }
+    }
 
     private void checkCommentStatus(Comment comment, Boolean isAuthor, Boolean isUpdate) {
         if (isAuthor) {
@@ -330,7 +303,8 @@ public class CommentServiceImpl implements CommentService {
             if (status.equals(UpdateCommentStatus.CONFIRMED)) {
                 comment.setStatus(CommentStatus.PUBLISHED);
                 comment.setPublishedOn(LocalDateTime.now());
-                publishedComments.add(commentRepository.save(comment));
+                Comment actualComment = commentRepository.save(comment);
+                publishedComments.add(actualComment);
 
             } else if (status.equals(UpdateCommentStatus.RETURNED_TO_CORRECTION)) {
                 if (text != null) {
@@ -358,11 +332,6 @@ public class CommentServiceImpl implements CommentService {
         return message;
     }
 
-    private Comment getCommentById(Long id) {
-        return commentRepository.findById(id).orElseThrow(() ->
-                new CommentNotFoundException(String.format("Комментарий с commentId=%d отсутствует в базе.", id)));
-    }
-
     private void validateEventState(Event event) {
         if (!event.getState().equals(State.PUBLISHED)) {
             throw new CommentValidationException(String.format("Нельзя комментировать неопубликованное событие: eventState= %s.",
@@ -371,7 +340,7 @@ public class CommentServiceImpl implements CommentService {
     }
 
     private void validateCommentAuthorOrEventInitiator(Comment comment, User user) {
-        if (!comment.getAuthor().equals(user) || !comment.getEvent().getInitiator().equals(user)) {
+        if (!(comment.getAuthor().equals(user) || comment.getEvent().getInitiator().equals(user))) {
             throw new CommentValidationException(String.format("Действие с комментарием могут совершать его автор или" +
                             "инициатор события: authorId= %d / initiatorId=%d. Действие запрошено пользователем с userId=%d",
                     comment.getAuthor().getId(), comment.getEvent().getInitiator().getId(), user.getId()));
