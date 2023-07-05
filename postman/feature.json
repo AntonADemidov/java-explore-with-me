@@ -451,7 +451,7 @@
 					"variable": [
 						{
 							"key": "eventId",
-							"value": "136",
+							"value": "106",
 							"description": "(Required) id события"
 						}
 					]
@@ -502,7 +502,7 @@
 					}
 				},
 				"url": {
-					"raw": "{{baseUrl}}/users/:userId/comments?eventId=136",
+					"raw": "{{baseUrl}}/users/:userId/comments?eventId=106",
 					"host": [
 						"{{baseUrl}}"
 					],
@@ -514,7 +514,7 @@
 					"query": [
 						{
 							"key": "eventId",
-							"value": "136"
+							"value": "106"
 						}
 					],
 					"variable": [
@@ -708,7 +708,7 @@
 					"variable": [
 						{
 							"key": "eventId",
-							"value": "136",
+							"value": "107",
 							"description": "(Required) id события"
 						}
 					]
@@ -1709,7 +1709,7 @@
 					"variable": [
 						{
 							"key": "userId",
-							"value": "3"
+							"value": "137"
 						},
 						{
 							"key": "commentId",
@@ -1781,7 +1781,7 @@
 					"variable": [
 						{
 							"key": "userId",
-							"value": "3"
+							"value": "138"
 						},
 						{
 							"key": "commentId",
@@ -1925,7 +1925,7 @@
 					"variable": [
 						{
 							"key": "userId",
-							"value": "3"
+							"value": "137"
 						},
 						{
 							"key": "commentId",
@@ -1949,9 +1949,9 @@
 							"pm.test(\"Test add comment to event 2 from user2\", function () {",
 							"    var jsonData = pm.response.json();",
 							"    pm.expect(jsonData.id, '\"id\" field').to.eql(1);",
-							"    pm.expect(jsonData.eventId, '\"eventId\" field').to.eql(2);",
+							"    pm.expect(jsonData.eventId, '\"eventId\" field').to.eql(107);",
 							"    pm.expect(jsonData.text, '\"text\" field').to.eql(\"Add comment from User #2\");",
-							"    pm.expect(jsonData.author.id, '\"authorId\" field').to.eql(2);",
+							"    pm.expect(jsonData.author.id, '\"authorId\" field').to.eql(137);",
 							"    pm.expect(jsonData.status, '\"status\" field').to.eql(\"PENDING\");",
 							"});"
 						],
@@ -2003,7 +2003,7 @@
 					"variable": [
 						{
 							"key": "userId",
-							"value": "2"
+							"value": "137"
 						},
 						{
 							"key": "commentId",
@@ -2141,7 +2141,7 @@
 					"variable": [
 						{
 							"key": "userId",
-							"value": "4"
+							"value": "139"
 						}
 					]
 				}
@@ -2174,7 +2174,7 @@
 							"pm.test(\"Test comment[0] 'eventId' field\", function () {",
 							"    var jsonData = pm.response.json();",
 							"    pm.expect(jsonData[0]).to.have.property('eventId');",
-							"    pm.expect(jsonData[0].eventId, '\"eventId\"  must be 2\"').to.eql(2);",
+							"    pm.expect(jsonData[0].eventId, '\"eventId\"  must be 107\"').to.eql(107);",
 							"});",
 							"pm.test(\"Test comment[0] 'text' field\", function () {",
 							"    var jsonData = pm.response.json();",
@@ -2185,7 +2185,7 @@
 							"    var jsonData = pm.response.json();",
 							"    pm.expect(jsonData[0]).to.have.property('author');",
 							"    pm.expect(jsonData[0].author).to.have.property('id');",
-							"    pm.expect(jsonData[0].author.id, '\"author.id\"  must be \"2\"').to.eql(2);",
+							"    pm.expect(jsonData[0].author.id, '\"author.id\"  must be \"137\"').to.eql(137);",
 							"});",
 							"pm.test(\"Test comment[0] 'status' field\", function () {",
 							"    var jsonData = pm.response.json();",
@@ -2240,7 +2240,7 @@
 					"variable": [
 						{
 							"key": "userId",
-							"value": "2"
+							"value": "137"
 						}
 					]
 				}
@@ -2376,7 +2376,7 @@
 					"variable": [
 						{
 							"key": "userId",
-							"value": "2"
+							"value": "137"
 						},
 						{
 							"key": "commentId",
@@ -2446,7 +2446,7 @@
 					"variable": [
 						{
 							"key": "userId",
-							"value": "4"
+							"value": "139"
 						},
 						{
 							"key": "commentId",
@@ -2516,7 +2516,7 @@
 					"variable": [
 						{
 							"key": "userId",
-							"value": "2"
+							"value": "137"
 						},
 						{
 							"key": "commentId",
@@ -2586,7 +2586,7 @@
 					"variable": [
 						{
 							"key": "userId",
-							"value": "3"
+							"value": "138"
 						},
 						{
 							"key": "commentId",
@@ -2610,9 +2610,9 @@
 							"pm.test(\"Test delete comment to event 2 from user2\", function () {",
 							"    var jsonData = pm.response.json();",
 							"    pm.expect(jsonData.id, '\"id\" field').to.eql(1);",
-							"    pm.expect(jsonData.eventId, '\"eventId\" field').to.eql(2);",
+							"    pm.expect(jsonData.eventId, '\"eventId\" field').to.eql(107);",
 							"    pm.expect(jsonData.text, '\"text\" field').to.eql(\"Add comment from User #2\");",
-							"    pm.expect(jsonData.author.id, '\"authorId\" field').to.eql(2);",
+							"    pm.expect(jsonData.author.id, '\"authorId\" field').to.eql(137);",
 							"    pm.expect(jsonData.status, '\"status\" field').to.eql(\"CANCELED\");",
 							"});"
 						],
@@ -2662,7 +2662,7 @@
 					"variable": [
 						{
 							"key": "userId",
-							"value": "2"
+							"value": "137"
 						},
 						{
 							"key": "commentId",
@@ -2734,7 +2734,7 @@
 					"variable": [
 						{
 							"key": "userId",
-							"value": "2"
+							"value": "137"
 						},
 						{
 							"key": "commentId",
@@ -2810,7 +2810,7 @@
 					"variable": [
 						{
 							"key": "userId",
-							"value": "2"
+							"value": "137"
 						}
 					]
 				}
@@ -2830,9 +2830,9 @@
 							"pm.test(\"Test add comment to event 2 from user2\", function () {",
 							"    var jsonData = pm.response.json();",
 							"    pm.expect(jsonData.id, '\"id\" field').to.eql(2);",
-							"    pm.expect(jsonData.eventId, '\"eventId\" field').to.eql(2);",
+							"    pm.expect(jsonData.eventId, '\"eventId\" field').to.eql(107);",
 							"    pm.expect(jsonData.text, '\"text\" field').to.eql(\"Add comment from User #2\");",
-							"    pm.expect(jsonData.author.id, '\"authorId\" field').to.eql(2);",
+							"    pm.expect(jsonData.author.id, '\"authorId\" field').to.eql(137);",
 							"    pm.expect(jsonData.status, '\"status\" field').to.eql(\"PENDING\");",
 							"});"
 						],
@@ -2868,7 +2868,7 @@
 					"raw": "{\n    \"text\": \"Add comment from User #2\"\n}"
 				},
 				"url": {
-					"raw": "{{baseUrl}}/users/:userId/comments?eventId=2",
+					"raw": "{{baseUrl}}/users/:userId/comments?eventId=107",
 					"host": [
 						"{{baseUrl}}"
 					],
@@ -2880,13 +2880,13 @@
 					"query": [
 						{
 							"key": "eventId",
-							"value": "2"
+							"value": "107"
 						}
 					],
 					"variable": [
 						{
 							"key": "userId",
-							"value": "2"
+							"value": "137"
 						}
 					]
 				}
@@ -2959,7 +2959,7 @@
 						},
 						{
 							"key": "eventId",
-							"value": "2"
+							"value": "107"
 						}
 					]
 				}
@@ -3028,7 +3028,7 @@
 					"variable": [
 						{
 							"key": "userId",
-							"value": "1"
+							"value": "136"
 						},
 						{
 							"key": "eventId",
@@ -3101,11 +3101,11 @@
 					"variable": [
 						{
 							"key": "userId",
-							"value": "4"
+							"value": "139"
 						},
 						{
 							"key": "eventId",
-							"value": "2"
+							"value": "107"
 						}
 					]
 				}
@@ -3174,11 +3174,11 @@
 					"variable": [
 						{
 							"key": "userId",
-							"value": "1"
+							"value": "106"
 						},
 						{
 							"key": "eventId",
-							"value": "3"
+							"value": "108"
 						}
 					]
 				}
@@ -3277,7 +3277,7 @@
 					"variable": [
 						{
 							"key": "userId",
-							"value": "3",
+							"value": "138",
 							"description": "(Required) id текущего пользователя"
 						}
 					]
@@ -3348,11 +3348,11 @@
 					"variable": [
 						{
 							"key": "userId",
-							"value": "1"
+							"value": "138"
 						},
 						{
 							"key": "eventId",
-							"value": "3"
+							"value": "107"
 						}
 					]
 				}
@@ -3385,7 +3385,7 @@
 							"pm.test(\"Test comment[0] 'eventId' field\", function () {",
 							"    var jsonData = pm.response.json();",
 							"    pm.expect(jsonData[0]).to.have.property('eventId');",
-							"    pm.expect(jsonData[0].eventId, '\"eventId\"  must be 2\"').to.eql(2);",
+							"    pm.expect(jsonData[0].eventId, '\"eventId\"  must be 107\"').to.eql(107);",
 							"});",
 							"pm.test(\"Test comment[0] 'text' field\", function () {",
 							"    var jsonData = pm.response.json();",
@@ -3396,7 +3396,7 @@
 							"    var jsonData = pm.response.json();",
 							"    pm.expect(jsonData[0]).to.have.property('author');",
 							"    pm.expect(jsonData[0].author).to.have.property('id');",
-							"    pm.expect(jsonData[0].author.id, '\"author.id\"  must be \"2\"').to.eql(2);",
+							"    pm.expect(jsonData[0].author.id, '\"author.id\"  must be \"137\"').to.eql(137);",
 							"});",
 							"pm.test(\"Test comment[0] 'status' field\", function () {",
 							"    var jsonData = pm.response.json();",
@@ -3412,7 +3412,7 @@
 							"pm.test(\"Test comment[1] 'eventId' field\", function () {",
 							"    var jsonData = pm.response.json();",
 							"    pm.expect(jsonData[1]).to.have.property('eventId');",
-							"    pm.expect(jsonData[1].eventId, '\"eventId\"  must be 2\"').to.eql(2);",
+							"    pm.expect(jsonData[1].eventId, '\"eventId\"  must be 107\"').to.eql(107);",
 							"});",
 							"pm.test(\"Test comment[1] 'text' field\", function () {",
 							"    var jsonData = pm.response.json();",
@@ -3423,7 +3423,7 @@
 							"    var jsonData = pm.response.json();",
 							"    pm.expect(jsonData[1]).to.have.property('author');",
 							"    pm.expect(jsonData[1].author).to.have.property('id');",
-							"    pm.expect(jsonData[1].author.id, '\"author.id\"  must be \"2\"').to.eql(2);",
+							"    pm.expect(jsonData[1].author.id, '\"author.id\"  must be \"137\"').to.eql(137);",
 							"});",
 							"pm.test(\"Test comment[1] 'status' field\", function () {",
 							"    var jsonData = pm.response.json();",
@@ -3480,11 +3480,11 @@
 					"variable": [
 						{
 							"key": "userId",
-							"value": "1"
+							"value": "136"
 						},
 						{
 							"key": "eventId",
-							"value": "2"
+							"value": "107"
 						}
 					]
 				}
@@ -3561,7 +3561,7 @@
 						},
 						{
 							"key": "eventId",
-							"value": "2"
+							"value": "107"
 						}
 					]
 				}
@@ -3634,7 +3634,7 @@
 					"variable": [
 						{
 							"key": "userId",
-							"value": "1"
+							"value": "136"
 						},
 						{
 							"key": "eventId",
@@ -3711,11 +3711,11 @@
 					"variable": [
 						{
 							"key": "userId",
-							"value": "1"
+							"value": "136"
 						},
 						{
 							"key": "eventId",
-							"value": "2"
+							"value": "107"
 						}
 					]
 				}
@@ -3788,11 +3788,11 @@
 					"variable": [
 						{
 							"key": "userId",
-							"value": "1"
+							"value": "136"
 						},
 						{
 							"key": "eventId",
-							"value": "0"
+							"value": "107"
 						}
 					]
 				}
@@ -3865,11 +3865,11 @@
 					"variable": [
 						{
 							"key": "userId",
-							"value": "1"
+							"value": "136"
 						},
 						{
 							"key": "eventId",
-							"value": "0"
+							"value": "107"
 						}
 					]
 				}
@@ -3942,11 +3942,11 @@
 					"variable": [
 						{
 							"key": "userId",
-							"value": "4"
+							"value": "139"
 						},
 						{
 							"key": "eventId",
-							"value": "2"
+							"value": "107"
 						}
 					]
 				}
@@ -4019,11 +4019,11 @@
 					"variable": [
 						{
 							"key": "userId",
-							"value": "1"
+							"value": "136"
 						},
 						{
 							"key": "eventId",
-							"value": "4"
+							"value": "109"
 						}
 					]
 				}
@@ -4096,11 +4096,11 @@
 					"variable": [
 						{
 							"key": "userId",
-							"value": "3"
+							"value": "136"
 						},
 						{
 							"key": "eventId",
-							"value": "2"
+							"value": "108"
 						}
 					]
 				}
@@ -4173,88 +4173,11 @@
 					"variable": [
 						{
 							"key": "userId",
-							"value": "1"
+							"value": "136"
 						},
 						{
 							"key": "eventId",
-							"value": "2"
-						}
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Отказ - изменение статусов комментариев инициатором события - 409 / комментарий не к этому событию",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test(\"Ответ должен содержать код статуса 409 и данные в формате json\", function () {",
-							"    pm.response.to.have.status(409);   ",
-							"    pm.response.to.be.withBody;",
-							"    pm.response.to.be.json;",
-							"});"
-						],
-						"type": "text/javascript"
-					}
-				},
-				{
-					"listen": "prerequest",
-					"script": {
-						"exec": [
-							""
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"method": "PATCH",
-				"header": [
-					{
-						"key": "Content-Type",
-						"value": "application/json",
-						"type": "text"
-					},
-					{
-						"key": "Accept",
-						"value": "*/*",
-						"type": "text"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n  \"commentIds\": [\r\n    1\r\n  ],\r\n  \"status\": \"CONFIRMED\"\r\n}"
-				},
-				"url": {
-					"raw": "{{baseUrl}}/users/:userId/events/:eventId/comments",
-					"host": [
-						"{{baseUrl}}"
-					],
-					"path": [
-						"users",
-						":userId",
-						"events",
-						":eventId",
-						"comments"
-					],
-					"query": [
-						{
-							"key": "text",
-							"value": null,
-							"disabled": true
-						}
-					],
-					"variable": [
-						{
-							"key": "userId",
-							"value": "1"
-						},
-						{
-							"key": "eventId",
-							"value": "2"
+							"value": "107"
 						}
 					]
 				}
@@ -4287,9 +4210,9 @@
 							"",
 							"pm.test(\"Комментарий должен иметь статус PENDING при создании и статус CONFIRMED после выполнения запроса\", function () {",
 							"    pm.expect(target.id).equal(2);",
-							"    pm.expect(target.eventId).equal(2);",
+							"    pm.expect(target.eventId).equal(107);",
 							"    pm.expect(target.text).equal(\"Add comment from User #2\");",
-							"    pm.expect(target.author.id).equal(2);",
+							"    pm.expect(target.author.id).equal(137);",
 							"    pm.expect(target.status).equal(\"PUBLISHED\");",
 							"});"
 						],
@@ -4346,11 +4269,11 @@
 					"variable": [
 						{
 							"key": "userId",
-							"value": "1"
+							"value": "136"
 						},
 						{
 							"key": "eventId",
-							"value": "2"
+							"value": "107"
 						}
 					]
 				}
@@ -4370,9 +4293,9 @@
 							"pm.test(\"Test add comment to event 2 from user3\", function () {",
 							"    var jsonData = pm.response.json();",
 							"    pm.expect(jsonData.id, '\"id\" field').to.eql(3);",
-							"    pm.expect(jsonData.eventId, '\"eventId\" field').to.eql(2);",
+							"    pm.expect(jsonData.eventId, '\"eventId\" field').to.eql(107);",
 							"    pm.expect(jsonData.text, '\"text\" field').to.eql(\"Add comment from User #2\");",
-							"    pm.expect(jsonData.author.id, '\"authorId\" field').to.eql(2);",
+							"    pm.expect(jsonData.author.id, '\"authorId\" field').to.eql(137);",
 							"    pm.expect(jsonData.status, '\"status\" field').to.eql(\"PENDING\");",
 							"});"
 						],
@@ -4408,7 +4331,7 @@
 					"raw": "{\n    \"text\": \"Add comment from User #2\"\n}"
 				},
 				"url": {
-					"raw": "{{baseUrl}}/users/:userId/comments?eventId=2",
+					"raw": "{{baseUrl}}/users/:userId/comments?eventId=107",
 					"host": [
 						"{{baseUrl}}"
 					],
@@ -4420,13 +4343,13 @@
 					"query": [
 						{
 							"key": "eventId",
-							"value": "2"
+							"value": "107"
 						}
 					],
 					"variable": [
 						{
 							"key": "userId",
-							"value": "2"
+							"value": "137"
 						}
 					]
 				}
@@ -4446,9 +4369,9 @@
 							"pm.test(\"Test get PENDING comment3 to event2 from user 2\", function () {",
 							"    var jsonData = pm.response.json();",
 							"    pm.expect(jsonData.id, '\"id\" field').to.eql(3);",
-							"    pm.expect(jsonData.eventId, '\"eventId\" field').to.eql(2);",
+							"    pm.expect(jsonData.eventId, '\"eventId\" field').to.eql(107);",
 							"    pm.expect(jsonData.text, '\"text\" field').to.eql(\"Add comment from User #2\");",
-							"    pm.expect(jsonData.author.id, '\"authorId\" field').to.eql(2);",
+							"    pm.expect(jsonData.author.id, '\"authorId\" field').to.eql(137);",
 							"    pm.expect(jsonData.status, '\"status\" field').to.eql(\"PENDING\");",
 							"    pm.expect(jsonData.messages.length, '\"messages\" field').to.eql(0);",
 							"});"
@@ -4503,11 +4426,11 @@
 					"variable": [
 						{
 							"key": "userId",
-							"value": "1"
+							"value": "136"
 						},
 						{
 							"key": "eventId",
-							"value": "2"
+							"value": "107"
 						},
 						{
 							"key": "commentId",
@@ -4544,9 +4467,9 @@
 							"",
 							"pm.test(\"Комментарий должен иметь статус PENDING при создании и статус CANCELED после выполнения запроса\", function () {",
 							"    pm.expect(target.id).equal(3);",
-							"    pm.expect(target.eventId).equal(2);",
+							"    pm.expect(target.eventId).equal(107);",
 							"    pm.expect(target.text).equal(\"Add comment from User #2\");",
-							"    pm.expect(target.author.id).equal(2);",
+							"    pm.expect(target.author.id).equal(137);",
 							"    pm.expect(target.status).equal(\"CANCELED\");",
 							"});"
 						],
@@ -4603,11 +4526,11 @@
 					"variable": [
 						{
 							"key": "userId",
-							"value": "1"
+							"value": "136"
 						},
 						{
 							"key": "eventId",
-							"value": "2"
+							"value": "107"
 						}
 					]
 				}
@@ -4629,7 +4552,7 @@
 							"    pm.response.to.be.withBody;",
 							"    pm.response.to.be.json;",
 							"    var jsonData = pm.response.json();",
-							"    pm.expect(jsonData.length, 'List length must be 1').to.eql(3);",
+							"    pm.expect(jsonData.length, 'List length must be 3').to.eql(3);",
 							"});",
 							"",
 							"pm.test(\"Test comment[0] 'id' field\", function () {",
@@ -4640,7 +4563,7 @@
 							"pm.test(\"Test comment[0] 'eventId' field\", function () {",
 							"    var jsonData = pm.response.json();",
 							"    pm.expect(jsonData[0]).to.have.property('eventId');",
-							"    pm.expect(jsonData[0].eventId, '\"eventId\"  must be 2\"').to.eql(2);",
+							"    pm.expect(jsonData[0].eventId, '\"eventId\"  must be 107\"').to.eql(107);",
 							"});",
 							"pm.test(\"Test comment[0] 'text' field\", function () {",
 							"    var jsonData = pm.response.json();",
@@ -4651,7 +4574,7 @@
 							"    var jsonData = pm.response.json();",
 							"    pm.expect(jsonData[0]).to.have.property('author');",
 							"    pm.expect(jsonData[0].author).to.have.property('id');",
-							"    pm.expect(jsonData[0].author.id, '\"author.id\"  must be \"2\"').to.eql(2);",
+							"    pm.expect(jsonData[0].author.id, '\"author.id\"  must be \"137\"').to.eql(137);",
 							"});",
 							"pm.test(\"Test comment[0] 'status' field\", function () {",
 							"    var jsonData = pm.response.json();",
@@ -4662,12 +4585,12 @@
 							"pm.test(\"Test comment[1] 'id' field\", function () {",
 							"    var jsonData = pm.response.json();",
 							"    pm.expect(jsonData[1]).to.have.property('id');",
-							"    pm.expect(jsonData[1].id, '\"id\" must be 1').to.eql(2);",
+							"    pm.expect(jsonData[1].id, '\"id\" must be 2').to.eql(2);",
 							"});",
 							"pm.test(\"Test comment[1] 'eventId' field\", function () {",
 							"    var jsonData = pm.response.json();",
 							"    pm.expect(jsonData[1]).to.have.property('eventId');",
-							"    pm.expect(jsonData[1].eventId, '\"eventId\"  must be 2\"').to.eql(2);",
+							"    pm.expect(jsonData[1].eventId, '\"eventId\"  must be 107\"').to.eql(107);",
 							"});",
 							"pm.test(\"Test comment[1] 'text' field\", function () {",
 							"    var jsonData = pm.response.json();",
@@ -4678,7 +4601,7 @@
 							"    var jsonData = pm.response.json();",
 							"    pm.expect(jsonData[1]).to.have.property('author');",
 							"    pm.expect(jsonData[1].author).to.have.property('id');",
-							"    pm.expect(jsonData[1].author.id, '\"author.id\"  must be \"2\"').to.eql(2);",
+							"    pm.expect(jsonData[1].author.id, '\"author.id\"  must be \"137\"').to.eql(137);",
 							"});",
 							"pm.test(\"Test comment[1] 'status' field\", function () {",
 							"    var jsonData = pm.response.json();",
@@ -4689,12 +4612,12 @@
 							"pm.test(\"Test comment[2] 'id' field\", function () {",
 							"    var jsonData = pm.response.json();",
 							"    pm.expect(jsonData[2]).to.have.property('id');",
-							"    pm.expect(jsonData[2].id, '\"id\" must be 1').to.eql(3);",
+							"    pm.expect(jsonData[2].id, '\"id\" must be 3').to.eql(3);",
 							"});",
 							"pm.test(\"Test comment[2] 'eventId' field\", function () {",
 							"    var jsonData = pm.response.json();",
 							"    pm.expect(jsonData[2]).to.have.property('eventId');",
-							"    pm.expect(jsonData[2].eventId, '\"eventId\"  must be 2\"').to.eql(2);",
+							"    pm.expect(jsonData[2].eventId, '\"eventId\"  must be 107\"').to.eql(107);",
 							"});",
 							"pm.test(\"Test comment[2] 'text' field\", function () {",
 							"    var jsonData = pm.response.json();",
@@ -4705,7 +4628,7 @@
 							"    var jsonData = pm.response.json();",
 							"    pm.expect(jsonData[2]).to.have.property('author');",
 							"    pm.expect(jsonData[2].author).to.have.property('id');",
-							"    pm.expect(jsonData[2].author.id, '\"author.id\"  must be \"2\"').to.eql(2);",
+							"    pm.expect(jsonData[2].author.id, '\"author.id\"  must be \"137\"').to.eql(137);",
 							"});",
 							"pm.test(\"Test comment[2] 'status' field\", function () {",
 							"    var jsonData = pm.response.json();",
@@ -4762,11 +4685,11 @@
 					"variable": [
 						{
 							"key": "userId",
-							"value": "1"
+							"value": "136"
 						},
 						{
 							"key": "eventId",
-							"value": "2"
+							"value": "107"
 						}
 					]
 				}
@@ -4786,9 +4709,9 @@
 							"pm.test(\"Test add comment to event 2 from user3\", function () {",
 							"    var jsonData = pm.response.json();",
 							"    pm.expect(jsonData.id, '\"id\" field').to.eql(4);",
-							"    pm.expect(jsonData.eventId, '\"eventId\" field').to.eql(2);",
+							"    pm.expect(jsonData.eventId, '\"eventId\" field').to.eql(107);",
 							"    pm.expect(jsonData.text, '\"text\" field').to.eql(\"Add comment from User #2\");",
-							"    pm.expect(jsonData.author.id, '\"authorId\" field').to.eql(2);",
+							"    pm.expect(jsonData.author.id, '\"authorId\" field').to.eql(137);",
 							"    pm.expect(jsonData.status, '\"status\" field').to.eql(\"PENDING\");",
 							"});"
 						],
@@ -4829,7 +4752,7 @@
 					"raw": "{\n    \"text\": \"Add comment from User #2\"\n}"
 				},
 				"url": {
-					"raw": "{{baseUrl}}/users/:userId/comments?eventId=2",
+					"raw": "{{baseUrl}}/users/:userId/comments?eventId=107",
 					"host": [
 						"{{baseUrl}}"
 					],
@@ -4841,13 +4764,13 @@
 					"query": [
 						{
 							"key": "eventId",
-							"value": "2"
+							"value": "107"
 						}
 					],
 					"variable": [
 						{
 							"key": "userId",
-							"value": "2"
+							"value": "137"
 						}
 					]
 				}
@@ -4881,9 +4804,9 @@
 							"",
 							"pm.test(\"Комментарий должен иметь статус PENDING при создании и статус REVIEWED после выполнения запроса\", function () {",
 							"    pm.expect(target.id).equal(4);",
-							"    pm.expect(target.eventId).equal(2);",
+							"    pm.expect(target.eventId).equal(107);",
 							"    pm.expect(target.text).equal(\"Add comment from User #2\");",
-							"    pm.expect(target.author.id).equal(2);",
+							"    pm.expect(target.author.id).equal(137);",
 							"    pm.expect(target.status).equal(\"REVIEWED\");",
 							"    pm.expect(target.messages.length).equal(1);",
 							"});"
@@ -4940,11 +4863,11 @@
 					"variable": [
 						{
 							"key": "userId",
-							"value": "1"
+							"value": "136"
 						},
 						{
 							"key": "eventId",
-							"value": "2"
+							"value": "107"
 						}
 					]
 				}
@@ -4964,9 +4887,9 @@
 							"pm.test(\"Test delete PUBLISHED comment2 to event2 from user1\", function () {",
 							"    var jsonData = pm.response.json();",
 							"    pm.expect(jsonData.id, '\"id\" field').to.eql(4);",
-							"    pm.expect(jsonData.eventId, '\"eventId\" field').to.eql(2);",
+							"    pm.expect(jsonData.eventId, '\"eventId\" field').to.eql(107);",
 							"    pm.expect(jsonData.text, '\"text\" field').to.eql(\"Add comment from User #2\");",
-							"    pm.expect(jsonData.author.id, '\"authorId\" field').to.eql(2);",
+							"    pm.expect(jsonData.author.id, '\"authorId\" field').to.eql(137);",
 							"    pm.expect(jsonData.status, '\"status\" field').to.eql(\"REVIEWED\");",
 							"    pm.expect(jsonData.messages.length, '\"messages\" field').to.eql(1);",
 							"});"
@@ -5021,11 +4944,11 @@
 					"variable": [
 						{
 							"key": "userId",
-							"value": "1"
+							"value": "136"
 						},
 						{
 							"key": "eventId",
-							"value": "2"
+							"value": "107"
 						},
 						{
 							"key": "commentId",
@@ -5049,9 +4972,9 @@
 							"pm.test(\"Test get REVIEWED comment4 to event2 from user2\", function () {",
 							"    var jsonData = pm.response.json();",
 							"    pm.expect(jsonData.id, '\"id\" field').to.eql(4);",
-							"    pm.expect(jsonData.eventId, '\"eventId\" field').to.eql(2);",
+							"    pm.expect(jsonData.eventId, '\"eventId\" field').to.eql(107);",
 							"    pm.expect(jsonData.text, '\"text\" field').to.eql(\"Add comment from User #2\");",
-							"    pm.expect(jsonData.author.id, '\"authorId\" field').to.eql(2);",
+							"    pm.expect(jsonData.author.id, '\"authorId\" field').to.eql(137);",
 							"    pm.expect(jsonData.status, '\"status\" field').to.eql(\"REVIEWED\");",
 							"    pm.expect(jsonData.messages.length, '\"messages\" field').to.eql(1);",
 							"});"
@@ -5109,7 +5032,7 @@
 					"variable": [
 						{
 							"key": "userId",
-							"value": "2"
+							"value": "137"
 						},
 						{
 							"key": "commentId",
@@ -5141,12 +5064,12 @@
 							"pm.test(\"Test comment[0] 'id' field\", function () {",
 							"    var jsonData = pm.response.json();",
 							"    pm.expect(jsonData[0]).to.have.property('id');",
-							"    pm.expect(jsonData[0].id, '\"id\" must be 1').to.eql(2);",
+							"    pm.expect(jsonData[0].id, '\"id\" must be 2').to.eql(2);",
 							"});",
 							"pm.test(\"Test comment[0] 'eventId' field\", function () {",
 							"    var jsonData = pm.response.json();",
 							"    pm.expect(jsonData[0]).to.have.property('eventId');",
-							"    pm.expect(jsonData[0].eventId, '\"eventId\"  must be 2\"').to.eql(2);",
+							"    pm.expect(jsonData[0].eventId, '\"eventId\"  must be 107\"').to.eql(107);",
 							"});",
 							"pm.test(\"Test comment[0] 'text' field\", function () {",
 							"    var jsonData = pm.response.json();",
@@ -5157,7 +5080,7 @@
 							"    var jsonData = pm.response.json();",
 							"    pm.expect(jsonData[0]).to.have.property('author');",
 							"    pm.expect(jsonData[0].author).to.have.property('id');",
-							"    pm.expect(jsonData[0].author.id, '\"author.id\"  must be \"2\"').to.eql(2);",
+							"    pm.expect(jsonData[0].author.id, '\"author.id\"  must be \"137\"').to.eql(137);",
 							"});",
 							"pm.test(\"Test comment[0] 'status' field\", function () {",
 							"    var jsonData = pm.response.json();",
@@ -5174,12 +5097,12 @@
 							"pm.test(\"Test comment[1] 'id' field\", function () {",
 							"    var jsonData = pm.response.json();",
 							"    pm.expect(jsonData[1]).to.have.property('id');",
-							"    pm.expect(jsonData[1].id, '\"id\" must be 1').to.eql(4);",
+							"    pm.expect(jsonData[1].id, '\"id\" must be 4').to.eql(4);",
 							"});",
 							"pm.test(\"Test comment[1] 'eventId' field\", function () {",
 							"    var jsonData = pm.response.json();",
 							"    pm.expect(jsonData[1]).to.have.property('eventId');",
-							"    pm.expect(jsonData[1].eventId, '\"eventId\"  must be 2\"').to.eql(2);",
+							"    pm.expect(jsonData[1].eventId, '\"eventId\"  must be 107\"').to.eql(107);",
 							"});",
 							"pm.test(\"Test comment[1] 'text' field\", function () {",
 							"    var jsonData = pm.response.json();",
@@ -5190,7 +5113,7 @@
 							"    var jsonData = pm.response.json();",
 							"    pm.expect(jsonData[1]).to.have.property('author');",
 							"    pm.expect(jsonData[1].author).to.have.property('id');",
-							"    pm.expect(jsonData[1].author.id, '\"author.id\"  must be \"2\"').to.eql(2);",
+							"    pm.expect(jsonData[1].author.id, '\"author.id\"  must be \"137\"').to.eql(137);",
 							"});",
 							"pm.test(\"Test comment[1] 'status' field\", function () {",
 							"    var jsonData = pm.response.json();",
@@ -5250,7 +5173,7 @@
 					"variable": [
 						{
 							"key": "userId",
-							"value": "2"
+							"value": "137"
 						}
 					]
 				}
@@ -5384,7 +5307,7 @@
 					"variable": [
 						{
 							"key": "userId",
-							"value": "2"
+							"value": "137"
 						},
 						{
 							"key": "commentId",
@@ -5453,7 +5376,7 @@
 					"variable": [
 						{
 							"key": "userId",
-							"value": "2"
+							"value": "137"
 						},
 						{
 							"key": "commentId",
@@ -5522,7 +5445,7 @@
 					"variable": [
 						{
 							"key": "userId",
-							"value": "2"
+							"value": "137"
 						},
 						{
 							"key": "commentId",
@@ -5591,7 +5514,7 @@
 					"variable": [
 						{
 							"key": "userId",
-							"value": "4"
+							"value": "139"
 						},
 						{
 							"key": "commentId",
@@ -5660,7 +5583,7 @@
 					"variable": [
 						{
 							"key": "userId",
-							"value": "2"
+							"value": "137"
 						},
 						{
 							"key": "commentId",
@@ -5729,7 +5652,7 @@
 					"variable": [
 						{
 							"key": "userId",
-							"value": "3"
+							"value": "138"
 						},
 						{
 							"key": "commentId",
@@ -5753,9 +5676,9 @@
 							"pm.test(\"Test update comment to event 2 from user2\", function () {",
 							"    var jsonData = pm.response.json();",
 							"    pm.expect(jsonData.id, '\"id\" field').to.eql(4);",
-							"    pm.expect(jsonData.eventId, '\"eventId\" field').to.eql(2);",
+							"    pm.expect(jsonData.eventId, '\"eventId\" field').to.eql(107);",
 							"    pm.expect(jsonData.text, '\"text\" field').to.eql(\"Updated comment from User #2\");",
-							"    pm.expect(jsonData.author.id, '\"authorId\" field').to.eql(2);",
+							"    pm.expect(jsonData.author.id, '\"authorId\" field').to.eql(137);",
 							"    pm.expect(jsonData.status, '\"status\" field').to.eql(\"PENDING\");",
 							"    pm.expect(jsonData.messages.length, '\"messages\" field').to.eql(2);",
 							"});"
@@ -5811,7 +5734,7 @@
 					"variable": [
 						{
 							"key": "userId",
-							"value": "2"
+							"value": "137"
 						},
 						{
 							"key": "commentId",
@@ -5835,9 +5758,9 @@
 							"pm.test(\"Test update comment to event 2 from user2\", function () {",
 							"    var jsonData = pm.response.json();",
 							"    pm.expect(jsonData.id, '\"id\" field').to.eql(4);",
-							"    pm.expect(jsonData.eventId, '\"eventId\" field').to.eql(2);",
+							"    pm.expect(jsonData.eventId, '\"eventId\" field').to.eql(107);",
 							"    pm.expect(jsonData.text, '\"text\" field').to.eql(\"Updated Again comment from User #2\");",
-							"    pm.expect(jsonData.author.id, '\"authorId\" field').to.eql(2);",
+							"    pm.expect(jsonData.author.id, '\"authorId\" field').to.eql(137);",
 							"    pm.expect(jsonData.status, '\"status\" field').to.eql(\"PENDING\");",
 							"    pm.expect(jsonData.messages.length, '\"messages\" field').to.eql(2);",
 							"});"
@@ -5894,7 +5817,7 @@
 					"variable": [
 						{
 							"key": "userId",
-							"value": "2"
+							"value": "137"
 						},
 						{
 							"key": "commentId",
@@ -5970,7 +5893,7 @@
 						},
 						{
 							"key": "eventId",
-							"value": "2"
+							"value": "107"
 						},
 						{
 							"key": "commentId",
@@ -6042,7 +5965,7 @@
 					"variable": [
 						{
 							"key": "userId",
-							"value": "1"
+							"value": "136"
 						},
 						{
 							"key": "eventId",
@@ -6118,7 +6041,7 @@
 					"variable": [
 						{
 							"key": "userId",
-							"value": "1"
+							"value": "136"
 						},
 						{
 							"key": "eventId",
@@ -6194,11 +6117,11 @@
 					"variable": [
 						{
 							"key": "userId",
-							"value": "4"
+							"value": "139"
 						},
 						{
 							"key": "eventId",
-							"value": "2"
+							"value": "107"
 						},
 						{
 							"key": "commentId",
@@ -6270,11 +6193,11 @@
 					"variable": [
 						{
 							"key": "userId",
-							"value": "1"
+							"value": "136"
 						},
 						{
 							"key": "eventId",
-							"value": "4"
+							"value": "109"
 						},
 						{
 							"key": "commentId",
@@ -6346,11 +6269,11 @@
 					"variable": [
 						{
 							"key": "userId",
-							"value": "1"
+							"value": "136"
 						},
 						{
 							"key": "eventId",
-							"value": "3"
+							"value": "108"
 						},
 						{
 							"key": "commentId",
@@ -6422,11 +6345,11 @@
 					"variable": [
 						{
 							"key": "userId",
-							"value": "1"
+							"value": "136"
 						},
 						{
 							"key": "eventId",
-							"value": "2"
+							"value": "107"
 						},
 						{
 							"key": "commentId",
@@ -6450,9 +6373,9 @@
 							"pm.test(\"Test delete PUBLISHED comment2 to event2 from user1\", function () {",
 							"    var jsonData = pm.response.json();",
 							"    pm.expect(jsonData.id, '\"id\" field').to.eql(2);",
-							"    pm.expect(jsonData.eventId, '\"eventId\" field').to.eql(2);",
+							"    pm.expect(jsonData.eventId, '\"eventId\" field').to.eql(107);",
 							"    pm.expect(jsonData.text, '\"text\" field').to.eql(\"Add comment from User #2\");",
-							"    pm.expect(jsonData.author.id, '\"authorId\" field').to.eql(2);",
+							"    pm.expect(jsonData.author.id, '\"authorId\" field').to.eql(137);",
 							"    pm.expect(jsonData.status, '\"status\" field').to.eql(\"DELETED\");",
 							"    pm.expect(jsonData.messages.length, '\"messages\" field').to.eql(0);",
 							"});"
@@ -6505,11 +6428,11 @@
 					"variable": [
 						{
 							"key": "userId",
-							"value": "1"
+							"value": "136"
 						},
 						{
 							"key": "eventId",
-							"value": "2"
+							"value": "107"
 						},
 						{
 							"key": "commentId",
@@ -6547,9 +6470,9 @@
 							"",
 							"pm.test(\"Комментарий должен иметь статус PENDING при создании и статус PUBLISHED после выполнения запроса\", function () {",
 							"    pm.expect(target.id).equal(4);",
-							"    pm.expect(target.eventId).equal(2);",
+							"    pm.expect(target.eventId).equal(107);",
 							"    pm.expect(target.text).equal(\"Updated Again comment from User #2\");",
-							"    pm.expect(target.author.id).equal(2);",
+							"    pm.expect(target.author.id).equal(137);",
 							"    pm.expect(target.status).equal(\"PUBLISHED\");",
 							"    pm.expect(target.messages.length).equal(2);",
 							"});"
@@ -6607,7 +6530,7 @@
 					"variable": [
 						{
 							"key": "userId",
-							"value": "1"
+							"value": "136"
 						},
 						{
 							"key": "eventId",
@@ -6644,7 +6567,7 @@
 							"pm.test(\"Test comment[0] 'eventId' field\", function () {",
 							"    var jsonData = pm.response.json();",
 							"    pm.expect(jsonData[0]).to.have.property('eventId');",
-							"    pm.expect(jsonData[0].eventId, '\"eventId\"  must be 2\"').to.eql(2);",
+							"    pm.expect(jsonData[0].eventId, '\"eventId\"  must be 107\"').to.eql(107);",
 							"});",
 							"pm.test(\"Test comment[0] 'text' field\", function () {",
 							"    var jsonData = pm.response.json();",
@@ -6655,7 +6578,7 @@
 							"    var jsonData = pm.response.json();",
 							"    pm.expect(jsonData[0]).to.have.property('author');",
 							"    pm.expect(jsonData[0].author).to.have.property('id');",
-							"    pm.expect(jsonData[0].author.id, '\"author.id\"  must be \"2\"').to.eql(2);",
+							"    pm.expect(jsonData[0].author.id, '\"author.id\"  must be \"137\"').to.eql(137);",
 							"});",
 							"pm.test(\"Test comment[0] 'status' field\", function () {",
 							"    var jsonData = pm.response.json();",
@@ -6715,7 +6638,7 @@
 					"variable": [
 						{
 							"key": "userId",
-							"value": "2"
+							"value": "137"
 						}
 					]
 				}
@@ -6789,7 +6712,7 @@
 						},
 						{
 							"key": "eventId",
-							"value": "2"
+							"value": "107"
 						},
 						{
 							"key": "commentId",
@@ -6863,7 +6786,7 @@
 					"variable": [
 						{
 							"key": "userId",
-							"value": "1"
+							"value": "136"
 						},
 						{
 							"key": "eventId",
@@ -6941,11 +6864,11 @@
 					"variable": [
 						{
 							"key": "userId",
-							"value": "1"
+							"value": "136"
 						},
 						{
 							"key": "eventId",
-							"value": "2"
+							"value": "107"
 						},
 						{
 							"key": "commentId",
@@ -7019,11 +6942,11 @@
 					"variable": [
 						{
 							"key": "userId",
-							"value": "4"
+							"value": "139"
 						},
 						{
 							"key": "eventId",
-							"value": "2"
+							"value": "107"
 						},
 						{
 							"key": "commentId",
@@ -7097,11 +7020,11 @@
 					"variable": [
 						{
 							"key": "userId",
-							"value": "1"
+							"value": "136"
 						},
 						{
 							"key": "eventId",
-							"value": "4"
+							"value": "109"
 						},
 						{
 							"key": "commentId",
@@ -7175,11 +7098,11 @@
 					"variable": [
 						{
 							"key": "userId",
-							"value": "1"
+							"value": "136"
 						},
 						{
 							"key": "eventId",
-							"value": "2"
+							"value": "107"
 						},
 						{
 							"key": "commentId",
@@ -7253,11 +7176,11 @@
 					"variable": [
 						{
 							"key": "userId",
-							"value": "1"
+							"value": "136"
 						},
 						{
 							"key": "eventId",
-							"value": "3"
+							"value": "108"
 						},
 						{
 							"key": "commentId",
@@ -7281,9 +7204,9 @@
 							"pm.test(\"Test get comment 1 to event 2 from user2\", function () {",
 							"    var jsonData = pm.response.json();",
 							"    pm.expect(jsonData.id, '\"id\" field').to.eql(1);",
-							"    pm.expect(jsonData.eventId, '\"eventId\" field').to.eql(2);",
+							"    pm.expect(jsonData.eventId, '\"eventId\" field').to.eql(107);",
 							"    pm.expect(jsonData.text, '\"text\" field').to.eql(\"Add comment from User #2\");",
-							"    pm.expect(jsonData.author.id, '\"authorId\" field').to.eql(2);",
+							"    pm.expect(jsonData.author.id, '\"authorId\" field').to.eql(137);",
 							"    pm.expect(jsonData.status, '\"status\" field').to.eql(\"CANCELED\");",
 							"    pm.expect(jsonData.messages.length).to.eql(0);",
 							"});"
@@ -7338,11 +7261,11 @@
 					"variable": [
 						{
 							"key": "userId",
-							"value": "1"
+							"value": "136"
 						},
 						{
 							"key": "eventId",
-							"value": "2"
+							"value": "107"
 						},
 						{
 							"key": "commentId",
@@ -7366,9 +7289,9 @@
 							"pm.test(\"Test delete PUBLISHED comment2 to event2 from user1\", function () {",
 							"    var jsonData = pm.response.json();",
 							"    pm.expect(jsonData.id, '\"id\" field').to.eql(2);",
-							"    pm.expect(jsonData.eventId, '\"eventId\" field').to.eql(2);",
+							"    pm.expect(jsonData.eventId, '\"eventId\" field').to.eql(107);",
 							"    pm.expect(jsonData.text, '\"text\" field').to.eql(\"Add comment from User #2\");",
-							"    pm.expect(jsonData.author.id, '\"authorId\" field').to.eql(2);",
+							"    pm.expect(jsonData.author.id, '\"authorId\" field').to.eql(137);",
 							"    pm.expect(jsonData.status, '\"status\" field').to.eql(\"DELETED\");",
 							"    pm.expect(jsonData.messages.length, '\"messages\" field').to.eql(0);",
 							"});"
@@ -7423,11 +7346,11 @@
 					"variable": [
 						{
 							"key": "userId",
-							"value": "1"
+							"value": "136"
 						},
 						{
 							"key": "eventId",
-							"value": "2"
+							"value": "107"
 						},
 						{
 							"key": "commentId",
@@ -7451,9 +7374,9 @@
 							"pm.test(\"Test get PUBLISHED comment4 to event2 from user2\", function () {",
 							"    var jsonData = pm.response.json();",
 							"    pm.expect(jsonData.id, '\"id\" field').to.eql(4);",
-							"    pm.expect(jsonData.eventId, '\"eventId\" field').to.eql(2);",
+							"    pm.expect(jsonData.eventId, '\"eventId\" field').to.eql(107);",
 							"    pm.expect(jsonData.text, '\"text\" field').to.eql(\"Updated Again comment from User #2\");",
-							"    pm.expect(jsonData.author.id, '\"authorId\" field').to.eql(2);",
+							"    pm.expect(jsonData.author.id, '\"authorId\" field').to.eql(137);",
 							"    pm.expect(jsonData.status, '\"status\" field').to.eql(\"PUBLISHED\");",
 							"    pm.expect(jsonData.messages.length, '\"messages\" field').to.eql(2);",
 							"});"
@@ -7508,11 +7431,11 @@
 					"variable": [
 						{
 							"key": "userId",
-							"value": "1"
+							"value": "136"
 						},
 						{
 							"key": "eventId",
-							"value": "2"
+							"value": "107"
 						},
 						{
 							"key": "commentId",
@@ -7536,9 +7459,9 @@
 							"pm.test(\"Test get REVIEWED comment4 to event2 from user2\", function () {",
 							"    var jsonData = pm.response.json();",
 							"    pm.expect(jsonData.id, '\"id\" field').to.eql(4);",
-							"    pm.expect(jsonData.eventId, '\"eventId\" field').to.eql(2);",
+							"    pm.expect(jsonData.eventId, '\"eventId\" field').to.eql(107);",
 							"    pm.expect(jsonData.text, '\"text\" field').to.eql(\"Updated Again comment from User #2\");",
-							"    pm.expect(jsonData.author.id, '\"authorId\" field').to.eql(2);",
+							"    pm.expect(jsonData.author.id, '\"authorId\" field').to.eql(137);",
 							"    pm.expect(jsonData.status, '\"status\" field').to.eql(\"PUBLISHED\");",
 							"    pm.expect(jsonData.messages.length, '\"messages\" field').to.eql(2);",
 							"});"
@@ -7596,7 +7519,7 @@
 					"variable": [
 						{
 							"key": "userId",
-							"value": "2"
+							"value": "137"
 						},
 						{
 							"key": "commentId",
@@ -7622,7 +7545,7 @@
 							"    pm.response.to.be.withBody;",
 							"    pm.response.to.be.json;",
 							"    var jsonData = pm.response.json();",
-							"    pm.expect(jsonData.length, 'List length must be 1').to.eql(4);",
+							"    pm.expect(jsonData.length, 'List length must be 4').to.eql(4);",
 							"});",
 							"",
 							"pm.test(\"Test comment[0] 'id' field\", function () {",
@@ -7723,11 +7646,11 @@
 					"variable": [
 						{
 							"key": "userId",
-							"value": "1"
+							"value": "136"
 						},
 						{
 							"key": "eventId",
-							"value": "2"
+							"value": "107"
 						}
 					]
 				}
@@ -7747,9 +7670,9 @@
 							"pm.test(\"Test delete comment4 to event2 from user2\", function () {",
 							"    var jsonData = pm.response.json();",
 							"    pm.expect(jsonData.id, '\"id\" field').to.eql(4);",
-							"    pm.expect(jsonData.eventId, '\"eventId\" field').to.eql(2);",
+							"    pm.expect(jsonData.eventId, '\"eventId\" field').to.eql(107);",
 							"    pm.expect(jsonData.text, '\"text\" field').to.eql(\"Updated Again comment from User #2\");",
-							"    pm.expect(jsonData.author.id, '\"authorId\" field').to.eql(2);",
+							"    pm.expect(jsonData.author.id, '\"authorId\" field').to.eql(137);",
 							"    pm.expect(jsonData.status, '\"status\" field').to.eql(\"DELETED\");",
 							"    pm.expect(jsonData.messages.length, '\"messages\" field').to.eql(2);",
 							"});"
@@ -7800,7 +7723,7 @@
 					"variable": [
 						{
 							"key": "userId",
-							"value": "2"
+							"value": "137"
 						},
 						{
 							"key": "commentId",
@@ -7876,7 +7799,7 @@
 					"variable": [
 						{
 							"key": "userId",
-							"value": "2"
+							"value": "137"
 						}
 					]
 				}
@@ -7965,7 +7888,7 @@
 					"variable": [
 						{
 							"key": "eventId",
-							"value": "3",
+							"value": "108",
 							"description": "(Required) id события"
 						}
 					]
@@ -7987,9 +7910,9 @@
 							"pm.test(\"Test add comment 5 to event 3 from user2\", function () {",
 							"    var jsonData = pm.response.json();",
 							"    pm.expect(jsonData.id, '\"id\" field').to.eql(5);",
-							"    pm.expect(jsonData.eventId, '\"eventId\" field').to.eql(3);",
+							"    pm.expect(jsonData.eventId, '\"eventId\" field').to.eql(108);",
 							"    pm.expect(jsonData.text, '\"text\" field').to.eql(\"Comment #5 from User #2\");",
-							"    pm.expect(jsonData.author.id, '\"authorId\" field').to.eql(2);",
+							"    pm.expect(jsonData.author.id, '\"authorId\" field').to.eql(137);",
 							"    pm.expect(jsonData.status, '\"status\" field').to.eql(\"PENDING\");",
 							"});"
 						],
@@ -8030,7 +7953,7 @@
 					"raw": "{\n    \"text\": \"Comment #5 from User #2\"\n}"
 				},
 				"url": {
-					"raw": "{{baseUrl}}/users/:userId/comments?eventId=3",
+					"raw": "{{baseUrl}}/users/:userId/comments?eventId=108",
 					"host": [
 						"{{baseUrl}}"
 					],
@@ -8042,13 +7965,90 @@
 					"query": [
 						{
 							"key": "eventId",
-							"value": "3"
+							"value": "108"
 						}
 					],
 					"variable": [
 						{
 							"key": "userId",
-							"value": "2"
+							"value": "137"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Отказ - изменение статусов комментариев инициатором события - 409 / комментарий не к этому событию",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Ответ должен содержать код статуса 409 и данные в формате json\", function () {",
+							"    pm.response.to.have.status(409);   ",
+							"    pm.response.to.be.withBody;",
+							"    pm.response.to.be.json;",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Accept",
+						"value": "*/*",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"commentIds\": [\r\n    5\r\n  ],\r\n  \"status\": \"CONFIRMED\"\r\n}"
+				},
+				"url": {
+					"raw": "{{baseUrl}}/users/:userId/events/:eventId/comments",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"users",
+						":userId",
+						"events",
+						":eventId",
+						"comments"
+					],
+					"query": [
+						{
+							"key": "text",
+							"value": null,
+							"disabled": true
+						}
+					],
+					"variable": [
+						{
+							"key": "userId",
+							"value": "136"
+						},
+						{
+							"key": "eventId",
+							"value": "107"
 						}
 					]
 				}
@@ -8149,7 +8149,7 @@
 					"variable": [
 						{
 							"key": "userId",
-							"value": "3",
+							"value": "138",
 							"description": "(Required) id текущего пользователя"
 						}
 					]
@@ -8240,7 +8240,7 @@
 					"variable": [
 						{
 							"key": "eventId",
-							"value": "4",
+							"value": "109",
 							"description": "(Required) id события"
 						}
 					]
@@ -8262,9 +8262,9 @@
 							"pm.test(\"Test add comment 5 to event 3 from user2\", function () {",
 							"    var jsonData = pm.response.json();",
 							"    pm.expect(jsonData.id, '\"id\" field').to.eql(6);",
-							"    pm.expect(jsonData.eventId, '\"eventId\" field').to.eql(4);",
+							"    pm.expect(jsonData.eventId, '\"eventId\" field').to.eql(109);",
 							"    pm.expect(jsonData.text, '\"text\" field').to.eql(\"Comment #6 from User #2\");",
-							"    pm.expect(jsonData.author.id, '\"authorId\" field').to.eql(2);",
+							"    pm.expect(jsonData.author.id, '\"authorId\" field').to.eql(137);",
 							"    pm.expect(jsonData.status, '\"status\" field').to.eql(\"PUBLISHED\");",
 							"});"
 						],
@@ -8300,7 +8300,7 @@
 					"raw": "{\n    \"text\": \"Comment #6 from User #2\"\n}"
 				},
 				"url": {
-					"raw": "{{baseUrl}}/users/:userId/comments?eventId=4",
+					"raw": "{{baseUrl}}/users/:userId/comments?eventId=109",
 					"host": [
 						"{{baseUrl}}"
 					],
@@ -8312,13 +8312,13 @@
 					"query": [
 						{
 							"key": "eventId",
-							"value": "4"
+							"value": "109"
 						}
 					],
 					"variable": [
 						{
 							"key": "userId",
-							"value": "2"
+							"value": "137"
 						}
 					]
 				}
@@ -8419,7 +8419,7 @@
 					"variable": [
 						{
 							"key": "userId",
-							"value": "3",
+							"value": "138",
 							"description": "(Required) id текущего пользователя"
 						}
 					]
@@ -8510,7 +8510,7 @@
 					"variable": [
 						{
 							"key": "eventId",
-							"value": "5",
+							"value": "110",
 							"description": "(Required) id события"
 						}
 					]
@@ -8574,7 +8574,7 @@
 					}
 				],
 				"url": {
-					"raw": "{{baseUrl}}/users/:userId/requests?eventId=5",
+					"raw": "{{baseUrl}}/users/:userId/requests?eventId=110",
 					"host": [
 						"{{baseUrl}}"
 					],
@@ -8586,14 +8586,14 @@
 					"query": [
 						{
 							"key": "eventId",
-							"value": "5",
+							"value": "110",
 							"description": "(Required) id события"
 						}
 					],
 					"variable": [
 						{
 							"key": "userId",
-							"value": "2",
+							"value": "137",
 							"description": "(Required) id текущего пользователя"
 						}
 					]
@@ -8685,12 +8685,12 @@
 					"variable": [
 						{
 							"key": "userId",
-							"value": "2",
+							"value": "137",
 							"description": "(Required) id текущего пользователя"
 						},
 						{
 							"key": "eventId",
-							"value": "5",
+							"value": "110",
 							"description": "(Required) id события текущего пользователя"
 						}
 					]
@@ -8712,9 +8712,9 @@
 							"pm.test(\"Test add comment 7 to event 5 from user2\", function () {",
 							"    var jsonData = pm.response.json();",
 							"    pm.expect(jsonData.id, '\"id\" field').to.eql(7);",
-							"    pm.expect(jsonData.eventId, '\"eventId\" field').to.eql(5);",
+							"    pm.expect(jsonData.eventId, '\"eventId\" field').to.eql(110);",
 							"    pm.expect(jsonData.text, '\"text\" field').to.eql(\"Comment #7 from User #2\");",
-							"    pm.expect(jsonData.author.id, '\"authorId\" field').to.eql(2);",
+							"    pm.expect(jsonData.author.id, '\"authorId\" field').to.eql(137);",
 							"    pm.expect(jsonData.status, '\"status\" field').to.eql(\"PUBLISHED\");",
 							"});"
 						],
@@ -8750,7 +8750,7 @@
 					"raw": "{\n    \"text\": \"Comment #7 from User #2\"\n}"
 				},
 				"url": {
-					"raw": "{{baseUrl}}/users/:userId/comments?eventId=5",
+					"raw": "{{baseUrl}}/users/:userId/comments?eventId=110",
 					"host": [
 						"{{baseUrl}}"
 					],
@@ -8762,13 +8762,13 @@
 					"query": [
 						{
 							"key": "eventId",
-							"value": "5"
+							"value": "110"
 						}
 					],
 					"variable": [
 						{
 							"key": "userId",
-							"value": "2"
+							"value": "137"
 						}
 					]
 				}
@@ -8777,78 +8777,6 @@
 		},
 		{
 			"name": "Отказ - получение публичного комментария / 400 - некорректное значение eventId",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test(\"Ответ должен содержать код статуса 400 и данные в формате json\", function () {",
-							"    pm.response.to.have.status(400);   ",
-							"    pm.response.to.be.withBody;",
-							"    pm.response.to.be.json;",
-							"});"
-						],
-						"type": "text/javascript"
-					}
-				},
-				{
-					"listen": "prerequest",
-					"script": {
-						"exec": [
-							""
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"protocolProfileBehavior": {
-				"disableBodyPruning": true
-			},
-			"request": {
-				"method": "GET",
-				"header": [
-					{
-						"key": "Content-Type",
-						"value": "application/json",
-						"type": "text"
-					},
-					{
-						"key": "Accept",
-						"value": "*/*",
-						"type": "text"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": ""
-				},
-				"url": {
-					"raw": "{{baseUrl}}/events/:eventId/comments/:commentId",
-					"host": [
-						"{{baseUrl}}"
-					],
-					"path": [
-						"events",
-						":eventId",
-						"comments",
-						":commentId"
-					],
-					"variable": [
-						{
-							"key": "eventId",
-							"value": "5"
-						},
-						{
-							"key": "commentId",
-							"value": "0"
-						}
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Отказ - получение публичного комментария / 400 - некорректное значение commentId",
 			"event": [
 				{
 					"listen": "test",
@@ -8920,6 +8848,78 @@
 			"response": []
 		},
 		{
+			"name": "Отказ - получение публичного комментария / 400 - некорректное значение commentId",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Ответ должен содержать код статуса 400 и данные в формате json\", function () {",
+							"    pm.response.to.have.status(400);   ",
+							"    pm.response.to.be.withBody;",
+							"    pm.response.to.be.json;",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Accept",
+						"value": "*/*",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{baseUrl}}/events/:eventId/comments/:commentId",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"events",
+						":eventId",
+						"comments",
+						":commentId"
+					],
+					"variable": [
+						{
+							"key": "eventId",
+							"value": "110"
+						},
+						{
+							"key": "commentId",
+							"value": "0"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "Отказ - получение публичного комментария / 404 - отсутствие события в базе",
 			"event": [
 				{
@@ -8980,7 +8980,7 @@
 					"variable": [
 						{
 							"key": "eventId",
-							"value": "6"
+							"value": "111"
 						},
 						{
 							"key": "commentId",
@@ -9052,7 +9052,7 @@
 					"variable": [
 						{
 							"key": "eventId",
-							"value": "5"
+							"value": "110"
 						},
 						{
 							"key": "commentId",
@@ -9124,7 +9124,7 @@
 					"variable": [
 						{
 							"key": "eventId",
-							"value": "3"
+							"value": "108"
 						},
 						{
 							"key": "commentId",
@@ -9149,7 +9149,7 @@
 							"pm.test(\"Test get PUBLISHED comment7 to event5 from user2\", function () {",
 							"    var jsonData = pm.response.json();",
 							"    pm.expect(jsonData.id, '\"id\" field').to.eql(7);",
-							"    pm.expect(jsonData.authorId, '\"authorId\" field').to.eql(2);",
+							"    pm.expect(jsonData.authorId, '\"authorId\" field').to.eql(137);",
 							"    pm.expect(jsonData.text, '\"text\" field').to.eql(\"Comment #7 from User #2\");",
 							"});"
 						],
@@ -9201,7 +9201,7 @@
 					"variable": [
 						{
 							"key": "eventId",
-							"value": "5"
+							"value": "110"
 						},
 						{
 							"key": "commentId",
@@ -9362,7 +9362,7 @@
 					"variable": [
 						{
 							"key": "eventId",
-							"value": "5"
+							"value": "110"
 						}
 					]
 				}
@@ -9440,7 +9440,7 @@
 					"variable": [
 						{
 							"key": "eventId",
-							"value": "5"
+							"value": "110"
 						}
 					]
 				}
@@ -9519,7 +9519,7 @@
 					"variable": [
 						{
 							"key": "eventId",
-							"value": "6"
+							"value": "111"
 						}
 					]
 				}
@@ -9552,7 +9552,7 @@
 							"pm.test(\"Test comment[0] 'authorId' field\", function () {",
 							"    var jsonData = pm.response.json();",
 							"    pm.expect(jsonData[0]).to.have.property('authorId');",
-							"    pm.expect(jsonData[0].authorId, '\"authorId\" must be 2').to.eql(2);",
+							"    pm.expect(jsonData[0].authorId, '\"authorId\" must be 137').to.eql(137);",
 							"});",
 							"pm.test(\"Test comment[0] 'text' field\", function () {",
 							"    var jsonData = pm.response.json();",
@@ -9619,7 +9619,7 @@
 					"variable": [
 						{
 							"key": "eventId",
-							"value": "5"
+							"value": "110"
 						}
 					]
 				}
