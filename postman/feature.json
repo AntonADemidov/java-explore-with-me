@@ -1,7 +1,7 @@
 {
 	"info": {
-		"_postman_id": "0ad47f27-6ba8-4229-b67e-32f379d6e119",
-		"name": "feature",
+		"_postman_id": "dc82601f-68ab-42e2-a986-958137636551",
+		"name": "feature Copy",
 		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
 		"_exporter_id": "25495038"
 	},
@@ -295,7 +295,7 @@
 					"variable": [
 						{
 							"key": "userId",
-							"value": "1",
+							"value": "136",
 							"description": "(Required) id текущего пользователя"
 						}
 					]
@@ -346,7 +346,7 @@
 					}
 				},
 				"url": {
-					"raw": "{{baseUrl}}/users/:userId/comments?eventId=1",
+					"raw": "{{baseUrl}}/users/:userId/comments?eventId=106",
 					"host": [
 						"{{baseUrl}}"
 					],
@@ -358,13 +358,13 @@
 					"query": [
 						{
 							"key": "eventId",
-							"value": "1"
+							"value": "106"
 						}
 					],
 					"variable": [
 						{
 							"key": "userId",
-							"value": "2"
+							"value": "137"
 						}
 					]
 				}
@@ -451,7 +451,7 @@
 					"variable": [
 						{
 							"key": "eventId",
-							"value": "1",
+							"value": "136",
 							"description": "(Required) id события"
 						}
 					]
@@ -502,7 +502,7 @@
 					}
 				},
 				"url": {
-					"raw": "{{baseUrl}}/users/:userId/comments?eventId=1",
+					"raw": "{{baseUrl}}/users/:userId/comments?eventId=136",
 					"host": [
 						"{{baseUrl}}"
 					],
@@ -514,13 +514,13 @@
 					"query": [
 						{
 							"key": "eventId",
-							"value": "1"
+							"value": "136"
 						}
 					],
 					"variable": [
 						{
 							"key": "userId",
-							"value": "2"
+							"value": "137"
 						}
 					]
 				}
@@ -528,7 +528,7 @@
 			"response": []
 		},
 		{
-			"name": "УСПЕХ -  создание события - Event #2 (закрытое комментирование + премодерация)",
+			"name": "УСПЕХ -  создание события - EVENT #2 (закрытое комментирование + премодерация)",
 			"event": [
 				{
 					"listen": "prerequest",
@@ -619,7 +619,7 @@
 					"variable": [
 						{
 							"key": "userId",
-							"value": "1",
+							"value": "136",
 							"description": "(Required) id текущего пользователя"
 						}
 					]
@@ -708,7 +708,7 @@
 					"variable": [
 						{
 							"key": "eventId",
-							"value": "2",
+							"value": "136",
 							"description": "(Required) id события"
 						}
 					]
@@ -771,14 +771,14 @@
 					"query": [
 						{
 							"key": "eventId",
-							"value": "2",
+							"value": "107",
 							"disabled": true
 						}
 					],
 					"variable": [
 						{
 							"key": "userId",
-							"value": "2"
+							"value": "137"
 						}
 					]
 				}
@@ -845,7 +845,7 @@
 					"variable": [
 						{
 							"key": "userId",
-							"value": "2"
+							"value": "137"
 						}
 					]
 				}
@@ -894,7 +894,7 @@
 					}
 				},
 				"url": {
-					"raw": "{{baseUrl}}/users/:userId/comments?eventId=2",
+					"raw": "{{baseUrl}}/users/:userId/comments?eventId=107",
 					"host": [
 						"{{baseUrl}}"
 					],
@@ -906,7 +906,7 @@
 					"query": [
 						{
 							"key": "eventId",
-							"value": "2"
+							"value": "107"
 						}
 					],
 					"variable": [
@@ -961,7 +961,7 @@
 					}
 				},
 				"url": {
-					"raw": "{{baseUrl}}/users/:userId/comments?eventId=2",
+					"raw": "{{baseUrl}}/users/:userId/comments?eventId=107",
 					"host": [
 						"{{baseUrl}}"
 					],
@@ -973,13 +973,13 @@
 					"query": [
 						{
 							"key": "eventId",
-							"value": "2"
+							"value": "107"
 						}
 					],
 					"variable": [
 						{
 							"key": "userId",
-							"value": "3"
+							"value": "138"
 						}
 					]
 				}
@@ -1028,7 +1028,7 @@
 					}
 				},
 				"url": {
-					"raw": "{{baseUrl}}/users/:userId/comments?eventId=3",
+					"raw": "{{baseUrl}}/users/:userId/comments?eventId=108",
 					"host": [
 						"{{baseUrl}}"
 					],
@@ -1040,13 +1040,13 @@
 					"query": [
 						{
 							"key": "eventId",
-							"value": "3"
+							"value": "108"
 						}
 					],
 					"variable": [
 						{
 							"key": "userId",
-							"value": "2"
+							"value": "137"
 						}
 					]
 				}
@@ -1095,7 +1095,7 @@
 					}
 				},
 				"url": {
-					"raw": "{{baseUrl}}/users/:userId/comments?eventId=2",
+					"raw": "{{baseUrl}}/users/:userId/comments?eventId=107",
 					"host": [
 						"{{baseUrl}}"
 					],
@@ -1107,13 +1107,13 @@
 					"query": [
 						{
 							"key": "eventId",
-							"value": "2"
+							"value": "107"
 						}
 					],
 					"variable": [
 						{
 							"key": "userId",
-							"value": "2"
+							"value": "137"
 						}
 					]
 				}
@@ -1162,7 +1162,7 @@
 					}
 				},
 				"url": {
-					"raw": "{{baseUrl}}/users/:userId/comments?eventId=2",
+					"raw": "{{baseUrl}}/users/:userId/comments?eventId=107",
 					"host": [
 						"{{baseUrl}}"
 					],
@@ -1174,13 +1174,13 @@
 					"query": [
 						{
 							"key": "eventId",
-							"value": "2"
+							"value": "107"
 						}
 					],
 					"variable": [
 						{
 							"key": "userId",
-							"value": "2"
+							"value": "137"
 						}
 					]
 				}
@@ -1242,7 +1242,7 @@
 					}
 				],
 				"url": {
-					"raw": "{{baseUrl}}/users/:userId/requests?eventId=2",
+					"raw": "{{baseUrl}}/users/:userId/requests?eventId=107",
 					"host": [
 						"{{baseUrl}}"
 					],
@@ -1254,14 +1254,14 @@
 					"query": [
 						{
 							"key": "eventId",
-							"value": "2",
+							"value": "107",
 							"description": "(Required) id события"
 						}
 					],
 					"variable": [
 						{
 							"key": "userId",
-							"value": "2",
+							"value": "137",
 							"description": "(Required) id текущего пользователя"
 						}
 					]
@@ -1312,7 +1312,7 @@
 					}
 				},
 				"url": {
-					"raw": "{{baseUrl}}/users/:userId/comments?eventId=2",
+					"raw": "{{baseUrl}}/users/:userId/comments?eventId=107",
 					"host": [
 						"{{baseUrl}}"
 					],
@@ -1324,13 +1324,13 @@
 					"query": [
 						{
 							"key": "eventId",
-							"value": "2"
+							"value": "107"
 						}
 					],
 					"variable": [
 						{
 							"key": "userId",
-							"value": "2"
+							"value": "137"
 						}
 					]
 				}
@@ -1398,7 +1398,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n  \"requestIds\": [\r\n    1\r\n  ],\r\n  \"status\": \"CONFIRMED\"\r\n}",
+					"raw": "{\r\n  \"requestIds\": [\r\n    14\r\n  ],\r\n  \"status\": \"CONFIRMED\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -1420,12 +1420,12 @@
 					"variable": [
 						{
 							"key": "userId",
-							"value": "2",
+							"value": "136",
 							"description": "(Required) id текущего пользователя"
 						},
 						{
 							"key": "eventId",
-							"value": "2",
+							"value": "107",
 							"description": "(Required) id события текущего пользователя"
 						}
 					]
@@ -1447,9 +1447,9 @@
 							"pm.test(\"Test add comment to event 2 from user2\", function () {",
 							"    var jsonData = pm.response.json();",
 							"    pm.expect(jsonData.id, '\"id\" field').to.eql(1);",
-							"    pm.expect(jsonData.eventId, '\"eventId\" field').to.eql(2);",
+							"    pm.expect(jsonData.eventId, '\"eventId\" field').to.eql(107);",
 							"    pm.expect(jsonData.text, '\"text\" field').to.eql(\"Add comment from User #2\");",
-							"    pm.expect(jsonData.author.id, '\"authorId\" field').to.eql(2);",
+							"    pm.expect(jsonData.author.id, '\"authorId\" field').to.eql(137);",
 							"    pm.expect(jsonData.status, '\"status\" field').to.eql(\"PENDING\");",
 							"});"
 						],
@@ -1485,7 +1485,7 @@
 					"raw": "{\n    \"text\": \"Add comment from User #2\"\n}"
 				},
 				"url": {
-					"raw": "{{baseUrl}}/users/:userId/comments?eventId=2",
+					"raw": "{{baseUrl}}/users/:userId/comments?eventId=107",
 					"host": [
 						"{{baseUrl}}"
 					],
@@ -1497,13 +1497,13 @@
 					"query": [
 						{
 							"key": "eventId",
-							"value": "2"
+							"value": "107"
 						}
 					],
 					"variable": [
 						{
 							"key": "userId",
-							"value": "2"
+							"value": "137"
 						}
 					]
 				}
@@ -1571,7 +1571,7 @@
 					"variable": [
 						{
 							"key": "userId",
-							"value": "3"
+							"value": "138"
 						},
 						{
 							"key": "commentId",
