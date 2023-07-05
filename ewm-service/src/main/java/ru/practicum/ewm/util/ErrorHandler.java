@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import ru.practicum.ewm.ApiError;
 import ru.practicum.ewm.DateValidationException;
 import ru.practicum.ewm.util.exception.category.CategoryNotFoundException;
+import ru.practicum.ewm.util.exception.comment.CommentNotFoundException;
+import ru.practicum.ewm.util.exception.comment.CommentValidationException;
 import ru.practicum.ewm.util.exception.compilation.CompilationNotFoundException;
 import ru.practicum.ewm.util.exception.event.EventNotFoundException;
 import ru.practicum.ewm.util.exception.event.EventValidationException;
@@ -20,6 +22,7 @@ import ru.practicum.ewm.util.exception.request.RequestNotFoundException;
 import ru.practicum.ewm.util.exception.request.RequestValidationException;
 import ru.practicum.ewm.util.exception.user.UserNotFoundException;
 
+import javax.validation.ConstraintViolationException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -32,7 +35,7 @@ public class ErrorHandler {
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ApiError handleMethodArgumentNotValidException(final MethodArgumentNotValidException exception) {
-        String reason = "Некорректные данные в теле запроса.";
+        String reason = "Переданные в теле запроса данные не прошли валидацию - объект не может быть создан.";
         log.error(exception.getMessage());
         return getApiError(HttpStatus.BAD_REQUEST, reason, exception.getMessage());
     }
@@ -40,7 +43,15 @@ public class ErrorHandler {
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ApiError handleMissingServletRequestParameterException(final MissingServletRequestParameterException exception) {
-        String reason = "Некорректные параметры запроса.";
+        String reason = "В переданном запросе отсутствуют обязательные параметры.";
+        log.error(exception.getMessage());
+        return getApiError(HttpStatus.BAD_REQUEST, reason, exception.getMessage());
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ApiError handleConstraintViolationException(final ConstraintViolationException exception) {
+        String reason = "Переданные в переменных пути или параметрах запроса данные не прошли валидацию.";
         log.error(exception.getMessage());
         return getApiError(HttpStatus.BAD_REQUEST, reason, exception.getMessage());
     }
@@ -53,7 +64,7 @@ public class ErrorHandler {
     }
 
     @ExceptionHandler({UserNotFoundException.class, CategoryNotFoundException.class, EventNotFoundException.class,
-            RequestNotFoundException.class, CompilationNotFoundException.class})
+            RequestNotFoundException.class, CompilationNotFoundException.class, CommentNotFoundException.class})
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ApiError handleNotFoundException(final RuntimeException exception) {
         log.error(exception.getMessage());
@@ -63,12 +74,12 @@ public class ErrorHandler {
     @ExceptionHandler
     @ResponseStatus(HttpStatus.CONFLICT)
     public ApiError handlePSQLException(final PSQLException exception) {
-        String reason = "Нарушение целостности данных.";
+        String reason = "Нарушение целостности данных при работе с базой данных";
         log.error(exception.getMessage());
         return getApiError(HttpStatus.CONFLICT, reason, exception.getMessage());
     }
 
-    @ExceptionHandler({EventValidationException.class, RequestValidationException.class})
+    @ExceptionHandler({EventValidationException.class, RequestValidationException.class, CommentValidationException.class})
     @ResponseStatus(HttpStatus.CONFLICT)
     public ApiError handleValidationException(final RuntimeException exception) {
         log.error(exception.getMessage());

@@ -1,4 +1,4 @@
-package ru.practicum.ewm.request.model;
+package ru.practicum.ewm.comment.model;
 
 import lombok.AccessLevel;
 import lombok.Data;
@@ -10,9 +10,9 @@ import java.util.List;
 
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class RequestStateUpdateRequest {
+public class CommentStatusUpdateRequest {
     @NotEmpty
-    List<Long> requestIds;
+    List<Long> commentIds;
     @NotBlank
     String status;
 }

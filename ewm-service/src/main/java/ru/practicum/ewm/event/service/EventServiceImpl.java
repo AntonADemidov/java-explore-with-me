@@ -54,12 +54,12 @@ public class EventServiceImpl implements ru.practicum.ewm.event.service.EventSer
     public EventFullDto createEvent(Long userId, NewEventDto newEventDto) {
         User user = userService.getUserById(userId);
 
-        if (newEventDto.getRequestModeration() == null) {
-            newEventDto.setRequestModeration(true);
-        }
+        setRequestModeration(newEventDto);
+        setClosedComments(newEventDto);
+        setCommentModeration(newEventDto);
 
         Event event = EventMapper.toEvent(newEventDto);
-        validateEventDate(event, 1);
+        validateEventDate(event, 2);
 
         Location location = LocationMapper.toLocation(newEventDto.getLocation());
         Location actualLocation = locationRepository.save(location);
@@ -225,6 +225,25 @@ public class EventServiceImpl implements ru.practicum.ewm.event.service.EventSer
         EventFullDto eventFullDto = EventMapper.toEventFullDto(event, uri, statsClient);
         log.info("Просмотр события по eventId={}.", eventFullDto.getId());
         return eventFullDto;
+    }
+
+
+    private void setRequestModeration(NewEventDto newEventDto) {
+        if (newEventDto.getRequestModeration() == null) {
+            newEventDto.setRequestModeration(true);
+        }
+    }
+
+    private void setClosedComments(NewEventDto newEventDto) {
+        if (newEventDto.getClosedComments() == null) {
+            newEventDto.setClosedComments(true);
+        }
+    }
+
+    private void setCommentModeration(NewEventDto newEventDto) {
+        if (newEventDto.getCommentModeration() == null) {
+            newEventDto.setCommentModeration(true);
+        }
     }
 
     private void saveStats(String uri, String ip, String timestamp) {
@@ -411,6 +430,8 @@ public class EventServiceImpl implements ru.practicum.ewm.event.service.EventSer
         updateEventDate(event, request);
         updatePaid(event, request);
         updateRequestModeration(event, request);
+        updateCommentModeration(event, request);
+        updateClosedComments(event, request);
         updateParticipantLimit(event, request);
         updateLocation(event, request);
         updateCategory(event, request);
@@ -449,6 +470,18 @@ public class EventServiceImpl implements ru.practicum.ewm.event.service.EventSer
     private void updateRequestModeration(Event event, UpdateEventRequest request) {
         if (request.getRequestModeration() != null) {
             event.setRequestModeration(request.getRequestModeration());
+        }
+    }
+
+    private void updateCommentModeration(Event event, UpdateEventRequest request) {
+        if (request.getCommentModeration() != null) {
+            event.setCommentModeration(request.getCommentModeration());
+        }
+    }
+
+    private void updateClosedComments(Event event, UpdateEventRequest request) {
+        if (request.getClosedComments() != null) {
+            event.setClosedComments(request.getClosedComments());
         }
     }
 

@@ -32,6 +32,10 @@ public class NewEventDto {
 
     long participantLimit;
 
+    Boolean commentModeration;
+
+    Boolean closedComments;
+
     @NotNull
     ru.practicum.ewm.event.model.LocationDto location;
 

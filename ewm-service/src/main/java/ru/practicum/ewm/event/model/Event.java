@@ -3,6 +3,7 @@ package ru.practicum.ewm.event.model;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import ru.practicum.ewm.category.model.Category;
+import ru.practicum.ewm.comment.model.Comment;
 import ru.practicum.ewm.compilation.model.Compilation;
 import ru.practicum.ewm.request.model.Request;
 import ru.practicum.ewm.user.model.User;
@@ -73,4 +74,13 @@ public class Event {
 
     @ManyToMany(mappedBy = "events")
     Set<Compilation> compilations;
+
+    @Column(name = "comment_moderation", nullable = false)
+    Boolean commentModeration;
+
+    @Column(name = "closed_comments", nullable = false)
+    Boolean closedComments;
+
+    @OneToMany(mappedBy = "event", fetch = FetchType.LAZY)
+    List<Comment> comments;
 }

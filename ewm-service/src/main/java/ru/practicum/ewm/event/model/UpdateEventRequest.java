@@ -23,6 +23,10 @@ public class UpdateEventRequest {
 
     Boolean requestModeration;
 
+    Boolean commentModeration;
+
+    Boolean closedComments;
+
     Long participantLimit;
 
     LocationDto location;

@@ -23,7 +23,7 @@ import java.util.List;
 @RequestMapping(path = "/users/{userId}")
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
-public class RequestController {
+public class RequestPrivateController {
     static final String REQUESTS = "/requests";
     static final String EVENTS_ID_REQUESTS = "/events/{eventId}/requests";
     static final String REQUEST_ID_CANCEL = "/{requestId}/cancel";
@@ -61,7 +61,7 @@ public class RequestController {
     @GetMapping(EVENTS_ID_REQUESTS)
     public List<RequestDto> getRequestByEventOwner(@PathVariable @Positive Long userId,
                                                    @PathVariable @Positive Long eventId) {
-        log.info("Просмотр запросов инициатором события: eventId={}, InitiatorId={}.", eventId, userId);
+        log.info("Просмотр запросов инициатором события: eventId={}, initiatorId={}.", eventId, userId);
         return requestService.getRequestByEventOwner(userId, eventId);
     }
 }
