@@ -35,7 +35,7 @@ public class ErrorHandler {
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ApiError handleMethodArgumentNotValidException(final MethodArgumentNotValidException exception) {
-        String reason = "Некорректные данные в теле запроса.";
+        String reason = "Переданные в теле запроса данные не прошли валидацию - объект не может быть создан.";
         log.error(exception.getMessage());
         return getApiError(HttpStatus.BAD_REQUEST, reason, exception.getMessage());
     }
@@ -43,7 +43,7 @@ public class ErrorHandler {
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ApiError handleMissingServletRequestParameterException(final MissingServletRequestParameterException exception) {
-        String reason = "Некорректные параметры запроса.";
+        String reason = "В переданном запросе отсутствуют обязательные параметры.";
         log.error(exception.getMessage());
         return getApiError(HttpStatus.BAD_REQUEST, reason, exception.getMessage());
     }
@@ -51,7 +51,7 @@ public class ErrorHandler {
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ApiError handleConstraintViolationException(final ConstraintViolationException exception) {
-        String reason = "Некорректные параметры запроса.";
+        String reason = "Переданные в переменных пути или параметрах запроса данные не прошли валидацию.";
         log.error(exception.getMessage());
         return getApiError(HttpStatus.BAD_REQUEST, reason, exception.getMessage());
     }
@@ -74,7 +74,7 @@ public class ErrorHandler {
     @ExceptionHandler
     @ResponseStatus(HttpStatus.CONFLICT)
     public ApiError handlePSQLException(final PSQLException exception) {
-        String reason = "Нарушение целостности данных.";
+        String reason = "Нарушение целостности данных при работе с базой данных";
         log.error(exception.getMessage());
         return getApiError(HttpStatus.CONFLICT, reason, exception.getMessage());
     }
